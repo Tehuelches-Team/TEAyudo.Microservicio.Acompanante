@@ -88,6 +88,39 @@ public class TEAyudoContext : DbContext
             .HasForeignKey(s => s.AcompananteId)
             .OnDelete(DeleteBehavior.Cascade);
         });
+
+
+
+        modelBuilder.Entity<ObraSocial>().HasData(
+            new ObraSocial { ObraSocialId = 1, Nombre = "OSDE", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 2, Nombre = "Swiss Medical", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 3, Nombre = "Galeno", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 4, Nombre = "Medicus", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 5, Nombre = "OSDEPYM", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 6, Nombre = "OSPE", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 7, Nombre = "OSSEG", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 8, Nombre = "OSUT", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 9, Nombre = "OSUTHGRA", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 10, Nombre = "OSFFENTOS", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 11, Nombre = "OSFATUN", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 12, Nombre = "OSPEPBA", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 13, Nombre = "OSPSA", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 14, Nombre = "OSPS", Descripcion = "Obra Social de Empresas" },
+            new ObraSocial { ObraSocialId = 15, Nombre = "OSPIA", Descripcion = "Obra Social de Empresas" }                       
+        );
+
+        modelBuilder.Entity<Especialidad>().HasData(
+            
+            new Especialidad { EspecialidadId = 1, Descripcion = "Acompañamiento Escolar Matutino" },
+            new Especialidad { EspecialidadId = 2, Descripcion = "Cuidado hogareño matutino" },
+            new Especialidad { EspecialidadId = 3, Descripcion = "Cuidado hogareñoa vespertino" },
+            new Especialidad { EspecialidadId = 4, Descripcion = "Cuidado hogareño fines de semana" },
+            new Especialidad { EspecialidadId = 5, Descripcion = "Acompañamiento escolar vespertino" },
+            new Especialidad { EspecialidadId = 6, Descripcion = "Acompañamiento actividad deportiva" },
+            new Especialidad { EspecialidadId = 7, Descripcion = "Acompañamoento especial eventual" },
+            new Especialidad { EspecialidadId = 8, Descripcion = "Cuidado de Personas con Parkinson" }
+
+             );
     }
 
 
