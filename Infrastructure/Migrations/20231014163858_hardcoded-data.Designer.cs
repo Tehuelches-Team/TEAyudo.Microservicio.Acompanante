@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TEAyudo_Acompanantes;
 
@@ -11,9 +12,11 @@ using TEAyudo_Acompanantes;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(TEAyudoContext))]
-    partial class TEAyudoContextModelSnapshot : ModelSnapshot
+    [Migration("20231014163858_hardcoded-data")]
+    partial class hardcodeddata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
