@@ -24,20 +24,11 @@ namespace Infraestructure.Command
             return Response;
         }
 
-        async Task<UsuarioResponse?> IUsuarioCommand.PutUsuario(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO)
+        async Task<UsuarioResponse?> IUsuarioCommand.PutUsuario(int Id, UsuarioDTO UsuarioDTO)
         {
             var Client = new RestClient("https://localhost:7174");
             var Request = new RestRequest("/api/Usuario/" + Id);
-            Request.AddJsonBody(new UsuarioDTO
-            {
-                Nombre=UsuarioAcompananteDTO.Nombre,
-                Apellido=UsuarioAcompananteDTO.Apellido,
-                CorreoElectronico = UsuarioAcompananteDTO.CorreoElectronico,
-                Contrasena = UsuarioAcompananteDTO.Contrasena,
-                FotoPerfil = UsuarioAcompananteDTO.FotoPerfil,
-                Domicilio =UsuarioAcompananteDTO.Domicilio,
-                FechaNacimiento= UsuarioAcompananteDTO.FechaNacimiento,
-            });
+            Request.AddJsonBody(UsuarioDTO);
             RestResponse Result = await Client.ExecutePutAsync(Request);
             if (Result.StatusCode == HttpStatusCode.Conflict)
             {

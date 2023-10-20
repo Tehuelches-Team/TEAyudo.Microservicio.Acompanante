@@ -5,6 +5,7 @@ using Application.Interfaces.Infraestructure.Query;
 using Application.UseCase.CrearUsuarioAcompante;
 using Application.UseCase.DTO;
 using Application.UseCase.DTOS;
+using Application.UseCase.Mapping;
 using Application.UseCase.Responses;
 using TEAyudo.DTO;
 using TEAyudo_Acompanantes;
@@ -69,7 +70,8 @@ namespace Application.UseCase.Services
         {
             await _AcompananteCommand.UpdateAcompanante(Id,UsuarioAcompananteDTO);
             Acompanante Acompanante = await _AcompananteQuery.GetAcompananteById(Id);
-            UsuarioResponse UsuarioResponse = await _UsuarioCommand.PutUsuario(Acompanante.UsuarioId ,UsuarioAcompananteDTO); //Ver bien como enviarle el DTO
+            MapUsuarioDTO Mapping = new MapUsuarioDTO();
+            UsuarioResponse UsuarioResponse = await _UsuarioCommand.PutUsuario(Acompanante.UsuarioId , Mapping.Map(UsuarioAcompananteDTO)); //Ver bien como enviarle el DTO
             return await _CreateResponse.CreateAcompananteResponse(Acompanante, UsuarioResponse); //Falta el usuarios
         }
 
