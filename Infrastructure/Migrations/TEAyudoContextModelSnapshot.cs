@@ -140,42 +140,12 @@ namespace Infraestructure.Migrations
                         new
                         {
                             EspecialidadId = 1,
-                            Descripcion = "Acompañamiento Escolar Matutino"
+                            Descripcion = "Acompañamiento Escolar"
                         },
                         new
                         {
                             EspecialidadId = 2,
-                            Descripcion = "Cuidado hogareño matutino"
-                        },
-                        new
-                        {
-                            EspecialidadId = 3,
-                            Descripcion = "Cuidado hogareñoa vespertino"
-                        },
-                        new
-                        {
-                            EspecialidadId = 4,
-                            Descripcion = "Cuidado hogareño fines de semana"
-                        },
-                        new
-                        {
-                            EspecialidadId = 5,
-                            Descripcion = "Acompañamiento escolar vespertino"
-                        },
-                        new
-                        {
-                            EspecialidadId = 6,
-                            Descripcion = "Acompañamiento actividad deportiva"
-                        },
-                        new
-                        {
-                            EspecialidadId = 7,
-                            Descripcion = "Acompañamoento especial eventual"
-                        },
-                        new
-                        {
-                            EspecialidadId = 8,
-                            Descripcion = "Cuidado de Personas con Parkinson"
+                            Descripcion = "Cuidado domiciliario"
                         });
                 });
 

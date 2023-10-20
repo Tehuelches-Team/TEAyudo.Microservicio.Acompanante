@@ -7,7 +7,7 @@
 namespace Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class hardcodeddata : Migration
+    public partial class addmigrationv1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,14 +17,8 @@ namespace Infraestructure.Migrations
                 columns: new[] { "EspecialidadId", "Descripcion" },
                 values: new object[,]
                 {
-                    { 1, "Acompañamiento Escolar Matutino" },
-                    { 2, "Cuidado hogareño matutino" },
-                    { 3, "Cuidado hogareñoa vespertino" },
-                    { 4, "Cuidado hogareño fines de semana" },
-                    { 5, "Acompañamiento escolar vespertino" },
-                    { 6, "Acompañamiento actividad deportiva" },
-                    { 7, "Acompañamoento especial eventual" },
-                    { 8, "Cuidado de Personas con Parkinson" }
+                    { 1, "Acompañamiento Escolar" },
+                    { 2, "Cuidado domiciliario" }
                 });
 
             migrationBuilder.InsertData(
@@ -62,36 +56,6 @@ namespace Infraestructure.Migrations
                 table: "Especialidad",
                 keyColumn: "EspecialidadId",
                 keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "Especialidad",
-                keyColumn: "EspecialidadId",
-                keyValue: 8);
 
             migrationBuilder.DeleteData(
                 table: "ObraSocial",

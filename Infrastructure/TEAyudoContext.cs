@@ -111,15 +111,8 @@ public class TEAyudoContext : DbContext
 
         modelBuilder.Entity<Especialidad>().HasData(
             
-            new Especialidad { EspecialidadId = 1, Descripcion = "Acompañamiento Escolar Matutino" },
-            new Especialidad { EspecialidadId = 2, Descripcion = "Cuidado hogareño matutino" },
-            new Especialidad { EspecialidadId = 3, Descripcion = "Cuidado hogareñoa vespertino" },
-            new Especialidad { EspecialidadId = 4, Descripcion = "Cuidado hogareño fines de semana" },
-            new Especialidad { EspecialidadId = 5, Descripcion = "Acompañamiento escolar vespertino" },
-            new Especialidad { EspecialidadId = 6, Descripcion = "Acompañamiento actividad deportiva" },
-            new Especialidad { EspecialidadId = 7, Descripcion = "Acompañamoento especial eventual" },
-            new Especialidad { EspecialidadId = 8, Descripcion = "Cuidado de Personas con Parkinson" }
-
+            new Especialidad { EspecialidadId = 1, Descripcion = "Acompañamiento Escolar" },
+            new Especialidad { EspecialidadId = 2, Descripcion = "Cuidado domiciliario" }
              );
     }
 
