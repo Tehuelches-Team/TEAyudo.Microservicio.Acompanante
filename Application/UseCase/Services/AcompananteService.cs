@@ -2,10 +2,10 @@
 using Application.Interfaces.Application;
 using Application.Interfaces.Infraestructure.Command;
 using Application.Interfaces.Infraestructure.Query;
+using Application.UseCase.CrearUsuarioAcompante;
 using Application.UseCase.DTO;
 using Application.UseCase.DTOS;
 using Application.UseCase.Responses;
-using System.Diagnostics.Contracts;
 using TEAyudo.DTO;
 using TEAyudo_Acompanantes;
 
@@ -13,95 +13,90 @@ namespace Application.UseCase.Services
 {
     public class AcompananteService : IAcompanteService
     {
-        private readonly IAcompananteCommand _Command;
-        private readonly IAcompananteQuery _Query;
+        private readonly IAcompananteCommand _AcompananteCommand;
+        private readonly IAcompananteQuery _AcompananteQuery;
+        private readonly ICreateAcompananteResponse _CreateResponse;
+        private readonly IUsuarioCommand _UsuarioCommand;
+        private readonly IUsuarioQuery _UsuarioQuery;
 
-        public AcompananteService(IAcompananteCommand Command, IAcompananteQuery Query)
+        public AcompananteService(IAcompananteCommand Command, IAcompananteQuery Query, ICreateAcompananteResponse CreateResponse, IUsuarioCommand UsuarioCommand, IUsuarioQuery UsuarioQuery)
         {
-            _Command = Command;
-            _Query = Query;
+            _AcompananteCommand = Command;
+            _AcompananteQuery = Query;
+            _CreateResponse = CreateResponse;
+            _UsuarioCommand = UsuarioCommand;
+            _UsuarioQuery = UsuarioQuery;
         }
 
         async Task<List<AcompananteResponse>> IAcompanteService.Filtrar(int? Id = null, int? Especialidad = null, int? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
         {
-            List<Acompanante> Acompanante = await _Query.GetAcompananteFiltros(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
-            return await CreateAcompanantesResponse(Acompanante);
+            List<Acompanante> ListaAcompanantes = await _AcompananteQuery.GetAcompananteFiltros(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
+            List<UsuarioResponse> ListaUsuarioResponse = await _UsuarioQuery.GetAllUsuarios();
+            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes, ListaUsuarioResponse); //Falta la lista de usuarios 
         }
 
         async Task<List<AcompananteResponse?>> IAcompanteService.GetAcompantes()
         {
-            List<Acompanante> Acompanante = await _Query.GetAcompanantes(); 
-            if (Acompanante.Count() == 0)                                   
+            List<Acompanante>? ListaAcompanantes = await _AcompananteQuery.GetAcompanantes(); 
+            if (ListaAcompanantes == null) // Debería comparar con null o con count ¿?                               
             {
                 return null;
             }
-            return await CreateAcompanantesResponse(Acompanante);
+
+            List<UsuarioResponse> ListaUsuarioResponse = await _UsuarioQuery.GetAllUsuarios();
+            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes,ListaUsuarioResponse); //Falta la lista de usuarios 
         }
 
         async Task<AcompananteResponse?> IAcompanteService.GetAcompanteById(int Id)
         {
-            List<Acompanante> Acompanante = new List<Acompanante>();
-            Acompanante.Add(await _Query.GetAcompananteById(Id));
-            if (Acompanante.First()==null)
+            Acompanante Acompanante = await _AcompananteQuery.GetAcompananteById(Id);
+            if (Acompanante == null)
             {
                 return null;
             }
-            List<AcompananteResponse> Response = await CreateAcompanantesResponse(Acompanante);
-            return Response.First();
+            UsuarioResponse Usuario = await _UsuarioQuery.GetUsuarioById(Acompanante.UsuarioId);
+            return await _CreateResponse.CreateAcompananteResponse(Acompanante,Usuario); //Falta el usuarios 
         }
 
         async Task<bool> IAcompanteService.IfExist(int Id)
         {
-            Acompanante Acompanante = await _Query.GetAcompananteById(Id);
+            Acompanante Acompanante = await _AcompananteQuery.GetAcompananteById(Id);
             if (Acompanante == null) return false;
             return true;
         }
 
-        async Task<AcompananteResponse> IAcompanteService.UpdateAcompante(int Id, AcompananteDTO AcompananteRecibido)
+        async Task<AcompananteResponse> IAcompanteService.UpdateAcompante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO)
         {
-            List<Acompanante> Acompanante = new List<Acompanante>();
-            await _Command.UpdateAcompanante(new Acompanante
-            {
-                AcompananteId = Id,
-                ZonaLaboral = AcompananteRecibido.ZonaLaboral,
-                Contacto = AcompananteRecibido.Contacto,
-                Documentacion = AcompananteRecibido.Documentacion,
-                Experiencia = AcompananteRecibido.Experiencia,
-            });
-
-            Acompanante.Add(await _Query.GetAcompananteById(Id));
-
-            List<AcompananteResponse> Response = await CreateAcompanantesResponse(Acompanante);
-            return Response.First();
+            await _AcompananteCommand.UpdateAcompanante(Id,UsuarioAcompananteDTO);
+            Acompanante Acompanante = await _AcompananteQuery.GetAcompananteById(Id);
+            UsuarioResponse UsuarioResponse = await _UsuarioCommand.PutUsuario(Acompanante.UsuarioId ,UsuarioAcompananteDTO); //Ver bien como enviarle el DTO
+            return await _CreateResponse.CreateAcompananteResponse(Acompanante, UsuarioResponse); //Falta el usuarios
         }
 
-        async Task<AcompananteResponse> IAcompanteService.CreateAcompante(AcompananteDTO AcompananteRecibido)
+        async Task<bool> IAcompanteService.CreateAcompante(AcompananteDTO AcompananteRecibido)
         {
-            List<Acompanante> Acompanante = new List<Acompanante>();
-            int Id=await _Command.CreateAcompanante(new Acompanante
+            await _AcompananteCommand.CreateAcompanante(new Acompanante
             {
+                UsuarioId = AcompananteRecibido.UsuarioId, 
                 ZonaLaboral = AcompananteRecibido.ZonaLaboral,
-                Contacto = AcompananteRecibido.Contacto,
+                Contacto = AcompananteRecibido.Contacto, 
                 Documentacion = AcompananteRecibido.Documentacion,
                 Experiencia = AcompananteRecibido.Experiencia,
             });
-            Acompanante.Add(await _Query.GetAcompananteById(Id));
-            List<AcompananteResponse> Response = await CreateAcompanantesResponse(Acompanante);
-            return Response.First();
+            return true;
         }
 
         async Task<AcompananteResponse> IAcompanteService.DeleteAcompante(int Id)
         {
-            List<Acompanante> Acompanante = new List<Acompanante>();
-            Acompanante.Add(await _Query.GetAcompananteById(Id));
-            await _Command.DeleteAcompanante(Acompanante.First());
-            List<AcompananteResponse> Response = await CreateAcompanantesResponse(Acompanante);
-            return Response.First();
+            Acompanante Acompanante = await _AcompananteQuery.GetAcompananteById(Id);
+            await _AcompananteCommand.DeleteAcompanante(Acompanante);
+            UsuarioResponse Usuario = await _UsuarioCommand.DeleteUsuario(Acompanante.UsuarioId);
+            return await _CreateResponse.CreateAcompananteResponse(Acompanante,Usuario); //Falta el usuario            
         }
 
         async Task<AcompananteObraSocialResponse?> IAcompanteService.CreateAcompanteObraSocial(AcompananteObraSocialDTO Relacion)
         {
-            Acompanante? Acompanante  = await _Query.GetAcompananteById(Relacion.AcompananteId);
+            Acompanante? Acompanante  = await _AcompananteQuery.GetAcompananteById(Relacion.AcompananteId);
 
             foreach (var item in Acompanante.ObrasSociales)
             {
@@ -111,13 +106,14 @@ namespace Application.UseCase.Services
                 }
             }
 
-            AcompananteObraSocial? AcompananteObraSocial = await _Command.CreateAcompanteObraSocial(new AcompananteObraSocial
+            AcompananteObraSocial? AcompananteObraSocial = await _AcompananteCommand.CreateAcompanteObraSocial(new AcompananteObraSocial
             {
                 AcompananteId = Relacion.AcompananteId,
                 ObrasocialId = Relacion.ObraSocialId,
             });
 
             if (AcompananteObraSocial == null) return null;
+
             List<ObraSocialResponse> ObraSociales = new List<ObraSocialResponse>();
             foreach (var item in AcompananteObraSocial.Acompanante.ObrasSociales)
             {
@@ -140,7 +136,7 @@ namespace Application.UseCase.Services
 
         async Task<AcompananteDisponibilidadSemanalResponse?> IAcompanteService.CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion)
         {
-            Acompanante? Acompanante = await _Command.CreateAcompanteDisponibilidad(Relacion);
+            Acompanante? Acompanante = await _AcompananteCommand.CreateAcompanteDisponibilidad(Relacion);
             
             if (Acompanante == null) return null;
             List<DisponibilidadResponse> Disponbilidades = new List<DisponibilidadResponse>();
@@ -167,7 +163,7 @@ namespace Application.UseCase.Services
 
         async Task<AcompananteEspecialidadResponse?> IAcompanteService.CreateAcompanteEspecialidad(AcompananteEspecialidadDTO Relacion)
         {
-            Acompanante? Acompanante = await _Query.GetAcompananteById(Relacion.AcompananteId);
+            Acompanante? Acompanante = await _AcompananteQuery.GetAcompananteById(Relacion.AcompananteId);
 
             foreach (var item in Acompanante.Especialidades)
             {
@@ -176,7 +172,7 @@ namespace Application.UseCase.Services
                     throw new RelacionExistenteException("");
                 }
             }
-            AcompananteEspecialidad? AcompananteEspecialidad =  await _Command.CreateAcompanteEspecialidad(new AcompananteEspecialidad
+            AcompananteEspecialidad? AcompananteEspecialidad =  await _AcompananteCommand.CreateAcompanteEspecialidad(new AcompananteEspecialidad
             {
                 AcompananteId = Relacion.AcompananteId,
                 EspecialidadId = Relacion.EspecialidadId,
@@ -201,59 +197,6 @@ namespace Application.UseCase.Services
                 Experiencia = AcompananteEspecialidad.Acompanante.Experiencia,
                 Especialidades = Especialidades,
             };
-        }
-
-        private async Task<List<AcompananteResponse>> CreateAcompanantesResponse(List<Acompanante> Acompanantes)
-        {
-            List<AcompananteResponse> ResultadosAcompanantes = new List<AcompananteResponse>();
-            foreach (var item in Acompanantes) 
-            {
-                List<ObraSocialResponse> ListaObrasSociales = new List<ObraSocialResponse>();
-                List<DisponibilidadResponse> ListaDisponibilidades = new List<DisponibilidadResponse>();
-                List<EspecialidadResponse> ListaEspecialidades = new List<EspecialidadResponse>();
-                foreach (var Single in item.Especialidades)
-                {
-                    ListaEspecialidades.Add(new EspecialidadResponse
-                    {
-                        EspecialidadId = Single.EspecialidadId,
-                        Descripcion = Single.Especialidad.Descripcion,
-                    });
-                }
-
-                foreach (var Single in item.ObrasSociales)
-                {
-                    ListaObrasSociales.Add(new ObraSocialResponse
-                    {
-                        ObraSocialId = Single.ObraSocial.ObraSocialId,
-                        Nombre = Single.ObraSocial.Nombre,
-                        Descripcion = Single.ObraSocial.Descripcion,
-                    });
-                }
-
-                foreach (var Single in item.DisponibilidadesSemanales)
-                {
-                    ListaDisponibilidades.Add(new DisponibilidadResponse
-                    {
-                        DisponibilidadSemanalId = Single.DisponibilidadSemanalId,
-                        DiaSemana = Single.DiaSemana,
-                        HorarioInicio = Single.HorarioInicio.ToString(@"hh\:mm"),
-                        HorarioFin = Single.HorarioFin.ToString(@"hh\:mm"),
-                    });
-                }
-
-                ResultadosAcompanantes.Add(new AcompananteResponse
-                {
-                    AcompananteId = item.AcompananteId,
-                    ZonaLaboral = item.ZonaLaboral,
-                    Contacto = item.Contacto,
-                    Documentacion = item.Documentacion,
-                    Experiencia = item.Experiencia,
-                    ObrasSociales = ListaObrasSociales,
-                    Disponibilidad = ListaDisponibilidades,
-                    Especialidad = ListaEspecialidades,
-                });
-            }
-            return ResultadosAcompanantes;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Application.Interfaces.Infraestructure.Command
 {
     public interface IAcompananteCommand
     {
-        Task UpdateAcompanante(Acompanante Acompanante);
+        Task UpdateAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO);
         Task<int> CreateAcompanante(Acompanante Acompanante);
         Task DeleteAcompanante(Acompanante Acompanante);
         Task<AcompananteObraSocial?> CreateAcompanteObraSocial(AcompananteObraSocial Relacion);

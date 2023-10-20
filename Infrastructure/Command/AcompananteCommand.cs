@@ -14,15 +14,15 @@ namespace Infraestructure.Command
             _Context = Context;
         }
 
-        async Task IAcompananteCommand.UpdateAcompanante(Acompanante AcompananteRecibido)
+        async Task IAcompananteCommand.UpdateAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO)
         {
-            Acompanante Acompanante = await _Context.Acompanantes.FirstOrDefaultAsync(s => s.AcompananteId == AcompananteRecibido.AcompananteId);
+            Acompanante Acompanante = await _Context.Acompanantes.FirstOrDefaultAsync(s => s.AcompananteId == Id);
 
-            Acompanante.ZonaLaboral = AcompananteRecibido.ZonaLaboral;
-            Acompanante.Contacto = AcompananteRecibido.Contacto;
-            Acompanante.Documentacion = AcompananteRecibido.Documentacion;
-            Acompanante.Experiencia = AcompananteRecibido.Experiencia;
-            _Context.SaveChanges();
+            Acompanante.ZonaLaboral = UsuarioAcompananteDTO.ZonaLaboral;
+            Acompanante.Contacto = UsuarioAcompananteDTO.Contacto;
+            Acompanante.Documentacion = UsuarioAcompananteDTO.Documentacion;
+            Acompanante.Experiencia = UsuarioAcompananteDTO.Experiencia;
+            _Context.SaveChanges(); 
         }
 
         async Task<int> IAcompananteCommand.CreateAcompanante(Acompanante AcompananteRecibido)
@@ -51,7 +51,7 @@ namespace Infraestructure.Command
 
         async Task<AcompananteEspecialidad?> IAcompananteCommand.CreateAcompanteEspecialidad(AcompananteEspecialidad Relacion)
         {
-            if (await _Context.Especialidades.FirstAsync(s => s.EspecialidadId == Relacion.EspecialidadId) != null)
+            if (await _Context.Especialidades.FirstOrDefaultAsync(s => s.EspecialidadId == Relacion.EspecialidadId) != null)
             {
                 _Context.Add(Relacion);
                 await _Context.SaveChangesAsync();

@@ -22,24 +22,30 @@ namespace TEAyudo.Controllers
             _ServiceDisponibilidad = ServiceDisponibilidad;
         }
 
-        [HttpGet("Filtros")] //Filtros, este no se toca. 
+        [HttpGet("Filtros")] 
         public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteByFiltros(int? Id = null, int? Especialidad = null, int? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
         {
-            List<AcompananteResponse> Result = await _ServiceAcompanante.Filtrar(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
+            if (Disponibilidad != null && (Disponibilidad < 1 || Disponibilidad > 6) ) //No debe de ir ya que en el front end se controlará.
+            {
+                var Respuesta = new { Motivo = "El dia de la semana debe de obedecer el rango el rango numerico [1,7]" };
+                return BadRequest(Respuesta);
+            }
 
-            if (!Result.Any())
+            List<AcompananteResponse> ListaAcompanantes = await _ServiceAcompanante.Filtrar(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
+
+            if (!ListaAcompanantes.Any())
             {
                 var respuesta = new { Motivo = "No se encuentran acompañantes con los requisitos buscados." };
                 return NotFound(respuesta);
             }
-            return Ok(Result);
+            return Ok(ListaAcompanantes);
         }
 
         [HttpGet("Acompanantes")]
         public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompanantes()
         {
             List<AcompananteResponse?> Disponibilidad = await _ServiceAcompanante.GetAcompantes();
-            if (Disponibilidad == null)
+            if (Disponibilidad.Count() == 0)
             {
                 var Respuesta = new { Motivo = "No se encontraron acompanantes registrados." };
                 return NotFound(Respuesta);
@@ -51,7 +57,6 @@ namespace TEAyudo.Controllers
         [HttpGet("{Id}")]
         public async Task<ActionResult<AcompananteResponse>> GetAcompanantesById(int Id)
         {
-           
                 AcompananteResponse? Disponibilidad = await _ServiceAcompanante.GetAcompanteById(Id);
                 if (Disponibilidad == null)
                 {
@@ -63,7 +68,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPut("{Id}")]
-        public async Task<IActionResult> PutAcompanante(int Id, AcompananteDTO AcompananteDTO) //Controlar los errores de la hora
+        public async Task<IActionResult> PutAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO) //Controlar los errores de la hora
         {
             if (!await _ServiceAcompanante.IfExist(Id))
             {
@@ -72,9 +77,13 @@ namespace TEAyudo.Controllers
             }
             try
             {
-                return Ok(await _ServiceAcompanante.UpdateAcompante(Id, AcompananteDTO));
-            }
-            catch (FormatException)
+                AcompananteResponse AcompananteResponse = await _ServiceAcompanante.UpdateAcompante(Id, UsuarioAcompananteDTO);
+                return Ok(AcompananteResponse);
+            }catch (ConflictoException ex)
+            {
+                var Respuesta = new { Motivo = ex.Message};
+                return Conflict(Respuesta);
+            }catch (FormatException)
             {
                 var Respuesta = new { Motivo = "Se ha ingresado un formato de hora no valido" };
                 return BadRequest(Respuesta);
@@ -85,8 +94,13 @@ namespace TEAyudo.Controllers
         [HttpPost("Acompanante")]
         public async Task<ActionResult<AcompananteResponse>> PostAcompanante(AcompananteDTO AcompananteDTO) //Controlar los errores de la hora
         {
-
-            return Ok(await _ServiceAcompanante.CreateAcompante(AcompananteDTO)); //Faltaría comprobar si entre los datos ingresados se encuentra un formato de correo adecuado. Primera idea, probar que finalice .contains(@gmail.com),.contains(@gmail.com),etc. El contains no servirá por si mismo;
+            bool Resultado = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); //Comprobar que el medio de comunicación no se encuentre registrado
+            if (Resultado)
+            {
+                return new JsonResult("Acompanante registrado con exito") { StatusCode = 201 };
+            } //El error de abajo seguramente se pueda quietar
+            var Respuesta = new { Motivo = "No se ha podido crear el tutor debido a que ya existe una cuenta asociada al correo electronico ingresado." };
+            return Conflict(Respuesta);
         }
 
         [HttpPost("Relacion/Acompanante/ObraSocial")]
@@ -147,8 +161,8 @@ namespace TEAyudo.Controllers
                 var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
                 return NotFound(Respuesta);
             }
-
-            return Ok(await _ServiceAcompanante.DeleteAcompante(Id));
+            AcompananteResponse AcompananteResponse = await _ServiceAcompanante.DeleteAcompante(Id);
+            return Ok(AcompananteResponse);
         }
 
         //Disponibilidad
@@ -235,7 +249,7 @@ namespace TEAyudo.Controllers
             {
                 ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioInicio);
                 ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioFin);
-                if (DisponibilidadDTO.DiaSemana > 7 || DisponibilidadDTO.DiaSemana < 1) //¿Debería de comprobar si existe en la base de datos, no condicionarlo así?
+                if (DisponibilidadDTO.DiaSemana > 6 || DisponibilidadDTO.DiaSemana < 1) //¿Debería de comprobar si existe en la base de datos, no condicionarlo así?
                 {
                     var Respuesta = new { Motivo = "El dia de la semana debe de obedecer el rango el rango numerico [1,7]" };
                     return BadRequest(Respuesta);

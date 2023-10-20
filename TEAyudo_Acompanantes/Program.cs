@@ -1,6 +1,7 @@
 using Application.Interfaces.Application;
 using Application.Interfaces.Infraestructure.Command;
 using Application.Interfaces.Infraestructure.Query;
+using Application.UseCase.CrearUsuarioAcompante;
 using Application.UseCase.Services;
 using Infraestructure.Command;
 using Infraestructure.Querys;
@@ -35,6 +36,9 @@ builder.Services.AddTransient<IAcompananteQuery, AcompananteQuery>();
 builder.Services.AddTransient<IEspecialidadQuery, EspecialidadQuery>();
 builder.Services.AddTransient<IObraSocialQuery, ObraSocialQuery>();
 builder.Services.AddTransient<IDisponibilidadQuery, DisponibilidadQuery>();
+builder.Services.AddTransient<ICreateAcompananteResponse, CreateAcompananteResponse>();
+builder.Services.AddTransient<IUsuarioCommand, UsuarioCommand>();
+builder.Services.AddTransient<IUsuarioQuery, UsuarioQuery>();
 
 
 var app = builder.Build();
