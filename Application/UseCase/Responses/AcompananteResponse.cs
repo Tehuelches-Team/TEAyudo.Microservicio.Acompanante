@@ -4,6 +4,7 @@ namespace TEAyudo.DTO
 {
     public class AcompananteResponse
     { //Se utiliza en los getters de acompanante para lograr mostrar los datos más relevantes
+        public int AcompananteId { get; set; }
         public int UsuarioId { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
@@ -13,7 +14,6 @@ namespace TEAyudo.DTO
         public string Domicilio { get; set; }
         public string FechaNacimiento { get; set; }
         public int? EstadoUsuarioId { get; set; }
-        public int AcompananteId { get; set; }
         public string ZonaLaboral { get; set; }
         public string Contacto { get; set; }
         public string Documentacion { get; set; }

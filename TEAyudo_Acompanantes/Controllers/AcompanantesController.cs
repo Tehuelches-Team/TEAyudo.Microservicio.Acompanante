@@ -85,7 +85,7 @@ namespace TEAyudo.Controllers
                 return Conflict(Respuesta);
             }catch (FormatException)
             {
-                var Respuesta = new { Motivo = "Se ha ingresado un formato de hora no valido" };
+                var Respuesta = new { Motivo = "Se ha ingresado un formato de fecha no valida" };
                 return BadRequest(Respuesta);
             }
         }

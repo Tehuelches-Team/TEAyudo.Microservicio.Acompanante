@@ -69,7 +69,7 @@ namespace Application.UseCase.Services
             }
             await _Command.UpdateDisponibilidad(new DisponibilidadSemanal
             {
-                DisponibilidadSemanalId=IdAcompanante,
+                DisponibilidadSemanalId= IdDisponibilidad,
                 DiaSemana = DisponibilidadDTO.DiaSemana,
                 HorarioInicio = DateTime.Parse(DisponibilidadDTO.HorarioInicio).TimeOfDay,
                 HorarioFin = DateTime.Parse(DisponibilidadDTO.HorarioFin).TimeOfDay,
@@ -77,7 +77,7 @@ namespace Application.UseCase.Services
 
             return new DisponibilidadResponse
             {
-                DisponibilidadSemanalId = IdAcompanante,
+                DisponibilidadSemanalId = IdDisponibilidad,
                 DiaSemana = DisponibilidadDTO.DiaSemana,
                 HorarioInicio = DateTime.Parse(DisponibilidadDTO.HorarioInicio).TimeOfDay.ToString(@"hh\:mm"),
                 HorarioFin = DateTime.Parse(DisponibilidadDTO.HorarioFin).TimeOfDay.ToString(@"hh\:mm"),
