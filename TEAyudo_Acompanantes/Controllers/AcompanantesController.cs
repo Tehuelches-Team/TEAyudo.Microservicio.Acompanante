@@ -41,7 +41,7 @@ namespace TEAyudo.Controllers
             return Ok(ListaAcompanantes);
         }
 
-        [HttpGet("Acompanantes")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompanantes()
         {
             List<AcompananteResponse?> Disponibilidad = await _ServiceAcompanante.GetAcompantes();
@@ -88,6 +88,12 @@ namespace TEAyudo.Controllers
                 var Respuesta = new { Motivo = "Se ha ingresado un formato de fecha no valida" };
                 return BadRequest(Respuesta);
             }
+        }
+
+        [HttpPut("{Id}/Propuesta")]
+        public async Task<IActionResult> PutPropuesta(int Id, int Estado) //Controlar los errores de la hora
+        {
+            return Ok( await _ServiceAcompanante.PutPropuesta(Id, Estado));
         }
 
 
@@ -307,5 +313,8 @@ namespace TEAyudo.Controllers
             }
             return Ok(Disponibilidad);
         }
+    
+    
+    
     }
 }

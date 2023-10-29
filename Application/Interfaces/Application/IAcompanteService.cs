@@ -1,4 +1,5 @@
-﻿using Application.UseCase.DTOS;
+﻿using Application.Model.Response;
+using Application.UseCase.DTOS;
 using Application.UseCase.Responses;
 using TEAyudo.DTO;
 using TEAyudo_Acompanantes;
@@ -17,5 +18,6 @@ namespace Application.Interfaces.Application
         Task<AcompananteObraSocialResponse?> CreateAcompanteObraSocial(AcompananteObraSocialDTO Relacion);
         Task<AcompananteDisponibilidadSemanalResponse?> CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion);
         Task<AcompananteEspecialidadResponse?> CreateAcompanteEspecialidad(AcompananteEspecialidadDTO Relacion);
+        Task<PropuestaResponse> PutPropuesta(int id, int Estado);
     }
 }

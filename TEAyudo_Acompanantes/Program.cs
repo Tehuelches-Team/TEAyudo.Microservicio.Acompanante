@@ -39,7 +39,7 @@ builder.Services.AddTransient<IDisponibilidadQuery, DisponibilidadQuery>();
 builder.Services.AddTransient<ICreateAcompananteResponse, CreateAcompananteResponse>();
 builder.Services.AddTransient<IUsuarioCommand, UsuarioCommand>();
 builder.Services.AddTransient<IUsuarioQuery, UsuarioQuery>();
-
+builder.Services.AddTransient<IPropuestaCommand, PropuestaCommand>();
 
 var app = builder.Build();
 

@@ -2,6 +2,7 @@
 using Application.Interfaces.Application;
 using Application.Interfaces.Infraestructure.Command;
 using Application.Interfaces.Infraestructure.Query;
+using Application.Model.Response;
 using Application.UseCase.CrearUsuarioAcompante;
 using Application.UseCase.DTO;
 using Application.UseCase.DTOS;
@@ -19,14 +20,15 @@ namespace Application.UseCase.Services
         private readonly ICreateAcompananteResponse _CreateResponse;
         private readonly IUsuarioCommand _UsuarioCommand;
         private readonly IUsuarioQuery _UsuarioQuery;
-
-        public AcompananteService(IAcompananteCommand Command, IAcompananteQuery Query, ICreateAcompananteResponse CreateResponse, IUsuarioCommand UsuarioCommand, IUsuarioQuery UsuarioQuery)
+        private readonly IPropuestaCommand _PropuestaCommand;
+        public AcompananteService(IAcompananteCommand Command, IAcompananteQuery Query, ICreateAcompananteResponse CreateResponse, IUsuarioCommand UsuarioCommand, IUsuarioQuery UsuarioQuery, IPropuestaCommand PropuestaCommand)
         {
             _AcompananteCommand = Command;
             _AcompananteQuery = Query;
             _CreateResponse = CreateResponse;
             _UsuarioCommand = UsuarioCommand;
             _UsuarioQuery = UsuarioQuery;
+            _PropuestaCommand = PropuestaCommand;
         }
 
         async Task<List<AcompananteResponse>> IAcompanteService.Filtrar(int? Id = null, int? Especialidad = null, int? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
@@ -199,6 +201,12 @@ namespace Application.UseCase.Services
                 Experiencia = AcompananteEspecialidad.Acompanante.Experiencia,
                 Especialidades = Especialidades,
             };
+        }
+
+        public async Task<PropuestaResponse> PutPropuesta(int Id, int Estado)
+        {
+            PropuestaResponse PropuestaResponse = await _PropuestaCommand.PutPropuesta(Id, Estado);
+            return PropuestaResponse;
         }
     }
 }
