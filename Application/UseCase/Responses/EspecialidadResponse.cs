@@ -1,9 +1,8 @@
-﻿namespace TEAyudo.DTO
+﻿namespace Application.UseCase.DTO
 {
-    public class EspecialidadDTO
+    public class EspecialidadResponse
     {
         public int EspecialidadId { get; set; }
         public string Descripcion { get; set; }
     }
-
 }

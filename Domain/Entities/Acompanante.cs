@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace TEAyudo_Acompanantes;
+﻿namespace TEAyudo_Acompanantes;
 public class Acompanante
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int AcompananteId { get; set; }
     public int UsuarioId { get; set; }
     public string ZonaLaboral { get; set; }
@@ -15,9 +10,7 @@ public class Acompanante
     public int EspecialidadId { get; set; }
     public string Experiencia { get; set; }
     public int DisponibilidadSemanalId { get; set; }
-    public ICollection<ObraSocial> ObrasSociales { get; set; }
-    public ICollection<Especialidad> Especialidades { get; set; }
+    public ICollection<AcompananteObraSocial> ObrasSociales { get; set; }
+    public ICollection<AcompananteEspecialidad> Especialidades { get; set; }
     public ICollection<DisponibilidadSemanal> DisponibilidadesSemanales { get; set; }
-
-
 }

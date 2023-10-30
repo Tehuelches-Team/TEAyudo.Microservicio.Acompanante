@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces.Application;
+using Application.UseCase.DTO;
+using Application.UseCase.DTOS;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TEAyudo;
-using TEAyudo.DTO;
-using TEAyudo_Acompanantes;
 
 namespace TEAyudo_Acompanantes.Controllers
 {
@@ -14,128 +9,94 @@ namespace TEAyudo_Acompanantes.Controllers
     [ApiController]
     public class EspecialidadesController : ControllerBase
     {
-        private readonly TEAyudoContext _context;
+        private readonly IEspecialidadService _Service;
 
-        public EspecialidadesController(TEAyudoContext context)
+        public EspecialidadesController(IEspecialidadService Service)
         {
-            _context = context;
+            _Service = Service;
         }
 
         // GET: api/Especialidades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EspecialidadDTO>>> GetEspecialidades()
+        public async Task<ActionResult<IEnumerable<EspecialidadResponse>>> GetEspecialidades() //Busco y entrego todas las especialidades
         {
-            var especialidades = await _context.Especialidades
-                .Select(e => new EspecialidadDTO
-                {
-                    EspecialidadId = e.EspecialidadId,
-                    Descripcion = e.Descripcion
-                })
-                .ToListAsync();
+            List<EspecialidadResponse> Especialidades = await _Service.GetEspecialidades();
 
-            if (especialidades == null)
+            if (Especialidades.Count() == 0)
             {
-                return NotFound();
+                var Respuesta = new { Motivo = "No se encontraron especialidades en la base de datos." };
+                return NotFound(Respuesta);
             }
 
-            return especialidades;
+            return Especialidades; //Controlar http code
         }
 
         // GET: api/Especialidades/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<EspecialidadDTO>> GetEspecialidad(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<EspecialidadResponse>> GetEspecialidad(int Id) //Busco y devuelvo una especialidad en concreto
         {
-            var especialidad = await _context.Especialidades
-            .Where(e => e.EspecialidadId == id)
-                .Select(e => new EspecialidadDTO
-                {
-                    EspecialidadId = e.EspecialidadId,
-                    Descripcion = e.Descripcion
-                })
-                .FirstOrDefaultAsync();
+            EspecialidadResponse Especialidad = await _Service.GetEspecialidadById(Id);
 
-            if (especialidad == null)
+            if (Especialidad == null)
             {
-                return NotFound();
+                var Respuesta = new { Motivo = "No se encontraron especialidades asociadas al id: " + Id };
+                return NotFound(Respuesta);
             }
 
-            return especialidad;
+            return Especialidad;
         }
 
         // PUT: api/Especialidades/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEspecialidad(int id, EspecialidadDTO especialidadDTO)
-        {
-            if (id != especialidadDTO.EspecialidadId)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> PutEspecialidad(int Id, EspecialidadDTO EspecialidadDTO) //Actualizo la informacion de una especialidad acorde el id ingresado
+        {//Comprobar que exista el id, y después ir y eliminarlo. 
+
+            if (!await _Service.IfExist(Id))
             {
-                return BadRequest();
+                var Respuesta = new { Motivo = "No se encontraron especialidades asociadas al id: " + Id };
+                return NotFound(Respuesta);
+            }
+            EspecialidadResponse? Especialidad = await _Service.UpdateEspecialidad(Id, EspecialidadDTO);
+
+            if (Especialidad == null)
+            {
+                var Respuesta = new { Motivo = "No es posible actualizar los datos de la especialidad ingresada, dado que existe otra especialidad con ese nombre en la base de datos" };
+                return NotFound(Respuesta);
             }
 
-            var especialidad = await _context.Especialidades.FindAsync(id);
-            if (especialidad == null)
-            {
-                return NotFound();
-            }
+            return Ok(Especialidad);
 
-            // Actualiza las propiedades de la entidad con los valores del DTO
-            especialidad.Descripcion = especialidadDTO.Descripcion;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EspecialidadExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            // catch (DbUpdateConcurrencyException)
         }
 
-        // POST: api/Especialidades
+
         [HttpPost]
-        public async Task<ActionResult<EspecialidadDTO>> PostEspecialidad(EspecialidadDTO especialidadDTO)
+        public async Task<ActionResult> PostEspecialidad(EspecialidadDTO EspecialidadDTO) //Se crea una nueva especialidad
         {
-            var especialidad = new Especialidad
+            EspecialidadResponse? Especialidad = await _Service.CreateEspecialidad(EspecialidadDTO);
+
+            if (Especialidad==null)
             {
-                Descripcion = especialidadDTO.Descripcion
-            };
+                var Respuesta = new { Motivo = "No es posible crear la especialidad ingresada, dado que ya existe una especialidad con ese nombre en la base de datos" };
+                return NotFound(Respuesta);
+            }
 
-            _context.Especialidades.Add(especialidad);
-            await _context.SaveChangesAsync();
-
-            // Actualiza el objeto DTO con el ID generado
-            especialidadDTO.EspecialidadId = especialidad.EspecialidadId;
-
-            return CreatedAtAction("GetEspecialidad", new { id = especialidadDTO.EspecialidadId }, especialidadDTO);
+            return Ok(Especialidad);
         }
 
         // DELETE: api/Especialidades/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEspecialidad(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteEspecialidad(int Id) //Busco y elimino una especialidad acorde el id
         {
-            var especialidad = await _context.Especialidades.FindAsync(id);
-            if (especialidad == null)
+            if (!await _Service.IfExist(Id))
             {
-                return NotFound();
+                var Respuesta = new { Motivo = "No se encontraron especialidades asociadas al id: " + Id };
+                return NotFound(Respuesta);
             }
 
-            _context.Especialidades.Remove(especialidad);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(await _Service.DeleteEspecialidad(Id));
         }
 
-        private bool EspecialidadExists(int id)
-        {
-            return _context.Especialidades.Any(e => e.EspecialidadId == id);
-        }
     }
 }
+

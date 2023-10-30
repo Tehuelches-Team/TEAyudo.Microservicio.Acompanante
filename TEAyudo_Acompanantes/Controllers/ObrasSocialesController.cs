@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TEAyudo.DTO;
-using TEAyudo_Acompanantes;
+﻿using Application.Interfaces.Application;
+using Application.UseCase.DTO;
+using Application.UseCase.DTOS;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TEAyudo_Acompanantes.Controllers
 {
@@ -9,104 +9,89 @@ namespace TEAyudo_Acompanantes.Controllers
     [ApiController]
     public class ObrasSocialesController : ControllerBase
     {
-        private readonly TEAyudoContext _context;
+        private readonly IObraSocialService _Service;
 
-        public ObrasSocialesController(TEAyudoContext context)
+        public ObrasSocialesController(IObraSocialService Service)
         {
-            _context = context;
+            _Service = Service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ObraSocial>>> GetObrasSociales()
+        public async Task<ActionResult<IEnumerable<ObraSocialResponse>>> GetObrasSociales()
         {
-            return await _context.ObrasSociales.ToListAsync();
+            List<ObraSocialResponse> ObraSociales = await _Service.GetObraSociales();
+
+            if (ObraSociales.Count() == 0)
+            {
+                var Respuesta = new { Motivo = "No se encontraron obras sociales registradas en la base de datos" };
+                return NotFound(Respuesta);
+                //Error no hay especialidades registradas aunque se supone que si o si debe de existir ya que no hay filtros.
+            }
+
+            return ObraSociales; //Controlar http code
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ObraSocial>> GetObraSocial(int id)
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<ObraSocialResponse>> GetObraSocial(int Id)
         {
-            var obraSocial = await _context.ObrasSociales.FindAsync(id);
+            ObraSocialResponse? ObraSocial = await _Service.GetObraSocialById(Id);
 
-            if (obraSocial == null)
+            if (ObraSocial == null)
             {
-                return NotFound();
+                var Respuesta = new { Motivo = "No se encontraron obras sociales asociadas al id: " + Id };
+                return NotFound(Respuesta);
             }
 
-            return obraSocial;
+            return ObraSocial;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutObraSocial(int id, ObraSocialDTO obraSocialDTO)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> PutObraSocial(int Id, ObraSocialDTO ObraSocialDTO)
         {
-            if (id != obraSocialDTO.ObraSocialId)
+
+            if (!await _Service.IfExist(Id))
             {
-                return BadRequest();
+                var Respuesta = new { Motivo = "No se encontraron obras sociales asociadas al id: " + Id };
+                return NotFound(Respuesta);
+            }
+            
+            ObraSocialResponse? ObraSocial = await _Service.UpdateObraSocial(Id, ObraSocialDTO);
+
+            if (ObraSocial == null)
+            {
+                var Respuesta = new { Motivo = "No es posible actualizar los datos de la obra social dado que ya existe una obra social en la base de datos con ese nombre" };
+                return NotFound(Respuesta);
             }
 
-            var obraSocial = new ObraSocial
-            {
-                ObraSocialId = obraSocialDTO.ObraSocialId,
-                Nombre = obraSocialDTO.Nombre,
-                Descripcion = obraSocialDTO.Descripcion
-            };
-
-            _context.Entry(obraSocial).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ObraSocialExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(ObraSocial);
         }
-
 
         [HttpPost]
-        public async Task<ActionResult<ObraSocial>> PostObraSocial(ObraSocialDTO obraSocialDTO)
+        public async Task<ActionResult<ObraSocialResponse>> PostObraSocial(ObraSocialDTO ObraSocialDTO)
         {
-            var obraSocial = new ObraSocial
+            ObraSocialResponse? ObraSocial = await _Service.CreateObraSocial(ObraSocialDTO);
+
+            if (ObraSocial == null)
             {
-                Nombre = obraSocialDTO.Nombre,
-                Descripcion = obraSocialDTO.Descripcion
-            };
-
-            _context.ObrasSociales.Add(obraSocial);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetObraSocial", new { id = obraSocial.ObraSocialId }, obraSocial);
-        }
-
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteObraSocial(int id)
-        {
-            var obraSocial = await _context.ObrasSociales.FindAsync(id);
-            if (obraSocial == null)
-            {
-                return NotFound();
+                var Respuesta = new { Motivo = "No es posible registrar la obra social dado que ya existe una obra social en la base de datos con ese nombre" };
+                return NotFound(Respuesta);
             }
 
-            _context.ObrasSociales.Remove(obraSocial);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(ObraSocial);
         }
 
-        private bool ObraSocialExists(int id)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteObraSocial(int Id)
         {
-            return _context.ObrasSociales.Any(e => e.ObraSocialId == id);
+            if (!await _Service.IfExist(Id))
+            {
+                var Respuesta = new { Motivo = "No se encontraron obras sociales asociadas al id: " + Id };
+                return NotFound(Respuesta);
+            }
+
+            return Ok(await _Service.DeleteObraSocial(Id));
         }
     }
 }
+

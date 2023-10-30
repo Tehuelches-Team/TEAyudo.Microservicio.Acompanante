@@ -2,7 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using TEAyudo;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TEAyudo_Acompanantes;
 
 #nullable disable
@@ -16,12 +17,12 @@ namespace Infraestructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Acompanante", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.Acompanante", b =>
                 {
                     b.Property<int>("AcompananteId")
                         .ValueGeneratedOnAdd()
@@ -59,13 +60,10 @@ namespace Infraestructure.Migrations
 
                     b.HasKey("AcompananteId");
 
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
-
                     b.ToTable("Acompanante", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.AcompananteEspecialidad", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.AcompananteEspecialidad", b =>
                 {
                     b.Property<int>("AcompananteId")
                         .HasColumnType("int");
@@ -77,10 +75,10 @@ namespace Infraestructure.Migrations
 
                     b.HasIndex("EspecialidadId");
 
-                    b.ToTable("AcompananteEspecialidad");
+                    b.ToTable("AcompanantesEspecialidades");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AcompananteObraSocial", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.AcompananteObraSocial", b =>
                 {
                     b.Property<int>("AcompananteId")
                         .HasColumnType("int");
@@ -92,10 +90,10 @@ namespace Infraestructure.Migrations
 
                     b.HasIndex("ObrasocialId");
 
-                    b.ToTable("AcompananteObraSocial");
+                    b.ToTable("AcompanantesObraSocial");
                 });
 
-            modelBuilder.Entity("Domain.Entities.DisponibilidadSemanal", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.DisponibilidadSemanal", b =>
                 {
                     b.Property<int>("DisponibilidadSemanalId")
                         .ValueGeneratedOnAdd()
@@ -109,20 +107,20 @@ namespace Infraestructure.Migrations
                     b.Property<int>("DiaSemana")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("HorarioFin")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("HorarioFin")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("HorarioInicio")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("HorarioInicio")
+                        .HasColumnType("time");
 
                     b.HasKey("DisponibilidadSemanalId");
 
                     b.HasIndex("AcompananteId");
 
-                    b.ToTable("DisponibilidadesSemanales");
+                    b.ToTable("DisponibilidadSemanal", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Especialidad", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.Especialidad", b =>
                 {
                     b.Property<int>("EspecialidadId")
                         .ValueGeneratedOnAdd()
@@ -136,41 +134,22 @@ namespace Infraestructure.Migrations
 
                     b.HasKey("EspecialidadId");
 
-                    b.ToTable("Especialidades");
+                    b.ToTable("Especialidad", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EspecialidadId = 1,
+                            Descripcion = "Acompañamiento Escolar"
+                        },
+                        new
+                        {
+                            EspecialidadId = 2,
+                            Descripcion = "Cuidado domiciliario"
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Entities.EstadoPropuesta", b =>
-                {
-                    b.Property<int>("EstadoPropuestaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EstadoPropuestaId"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EstadoPropuestaId");
-
-                    b.ToTable("EstadoPropuestas");
-                });
-
-            modelBuilder.Entity("Domain.Entities.EstadoUsuario", b =>
-                {
-                    b.Property<int>("EstadoUsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EstadoUsuarioId");
-
-                    b.ToTable("EstadoUsuarios");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ObraSocial", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.ObraSocial", b =>
                 {
                     b.Property<int>("ObraSocialId")
                         .ValueGeneratedOnAdd()
@@ -188,174 +167,113 @@ namespace Infraestructure.Migrations
 
                     b.HasKey("ObraSocialId");
 
-                    b.ToTable("ObrasSociales");
+                    b.ToTable("ObraSocial", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ObraSocialId = 1,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSDE"
+                        },
+                        new
+                        {
+                            ObraSocialId = 2,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "Swiss Medical"
+                        },
+                        new
+                        {
+                            ObraSocialId = 3,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "Galeno"
+                        },
+                        new
+                        {
+                            ObraSocialId = 4,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "Medicus"
+                        },
+                        new
+                        {
+                            ObraSocialId = 5,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSDEPYM"
+                        },
+                        new
+                        {
+                            ObraSocialId = 6,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSPE"
+                        },
+                        new
+                        {
+                            ObraSocialId = 7,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSSEG"
+                        },
+                        new
+                        {
+                            ObraSocialId = 8,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSUT"
+                        },
+                        new
+                        {
+                            ObraSocialId = 9,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSUTHGRA"
+                        },
+                        new
+                        {
+                            ObraSocialId = 10,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSFFENTOS"
+                        },
+                        new
+                        {
+                            ObraSocialId = 11,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSFATUN"
+                        },
+                        new
+                        {
+                            ObraSocialId = 12,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSPEPBA"
+                        },
+                        new
+                        {
+                            ObraSocialId = 13,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSPSA"
+                        },
+                        new
+                        {
+                            ObraSocialId = 14,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSPS"
+                        },
+                        new
+                        {
+                            ObraSocialId = 15,
+                            Descripcion = "Obra Social de Empresas",
+                            Nombre = "OSPIA"
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Paciente", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.AcompananteEspecialidad", b =>
                 {
-                    b.Property<int>("PacienteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PacienteId"));
-
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiagnosticoTEA")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sexo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PacienteId");
-
-                    b.HasIndex("TutorId");
-
-                    b.ToTable("Paciente", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Propuesta", b =>
-                {
-                    b.Property<int>("PropuestaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropuestaId"));
-
-                    b.Property<int>("AcompananteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoPropuestaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InfoAdicional")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Monto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropuestaId");
-
-                    b.HasIndex("AcompananteId");
-
-                    b.HasIndex("EstadoPropuestaId");
-
-                    b.HasIndex("TutorId");
-
-                    b.ToTable("Propuesta", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Tutor", b =>
-                {
-                    b.Property<int>("TutorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TutorId"));
-
-                    b.Property<string>("CertUniDisc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TutorId");
-
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
-
-                    b.ToTable("Tutor", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Usuario", b =>
-                {
-                    b.Property<int>("UsuarioId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioId"));
-
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Contrasena")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CorreoElectronico")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Domicilio")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EstadoUsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FotoPerfil")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UsuarioId");
-
-                    b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Acompanante", b =>
-                {
-                    b.HasOne("Domain.Entities.Usuario", "Usuario")
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Acompanante", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AcompananteEspecialidad", b =>
-                {
-                    b.HasOne("Domain.Entities.Acompanante", "Acompanante")
-                        .WithMany()
+                    b.HasOne("TEAyudo_Acompanantes.Acompanante", "Acompanante")
+                        .WithMany("Especialidades")
                         .HasForeignKey("AcompananteId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Especialidad", "Especialidad")
-                        .WithMany()
+                    b.HasOne("TEAyudo_Acompanantes.Especialidad", "Especialidad")
+                        .WithMany("Acompanantes")
                         .HasForeignKey("EspecialidadId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Acompanante");
@@ -363,16 +281,16 @@ namespace Infraestructure.Migrations
                     b.Navigation("Especialidad");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AcompananteObraSocial", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.AcompananteObraSocial", b =>
                 {
-                    b.HasOne("Domain.Entities.Acompanante", "Acompanante")
-                        .WithMany()
+                    b.HasOne("TEAyudo_Acompanantes.Acompanante", "Acompanante")
+                        .WithMany("ObrasSociales")
                         .HasForeignKey("AcompananteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ObraSocial", "ObraSocial")
-                        .WithMany()
+                    b.HasOne("TEAyudo_Acompanantes.ObraSocial", "ObraSocial")
+                        .WithMany("Acompanantes")
                         .HasForeignKey("ObrasocialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -382,100 +300,34 @@ namespace Infraestructure.Migrations
                     b.Navigation("ObraSocial");
                 });
 
-            modelBuilder.Entity("Domain.Entities.DisponibilidadSemanal", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.DisponibilidadSemanal", b =>
                 {
-                    b.HasOne("Domain.Entities.Acompanante", "Acompanante")
+                    b.HasOne("TEAyudo_Acompanantes.Acompanante", "Acompanante")
                         .WithMany("DisponibilidadesSemanales")
                         .HasForeignKey("AcompananteId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Acompanante");
                 });
 
-            modelBuilder.Entity("Domain.Entities.EstadoUsuario", b =>
-                {
-                    b.HasOne("Domain.Entities.Usuario", "Usuario")
-                        .WithOne("EstadoUsuario")
-                        .HasForeignKey("Domain.Entities.EstadoUsuario", "EstadoUsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Paciente", b =>
-                {
-                    b.HasOne("Domain.Entities.Tutor", "Tutor")
-                        .WithMany("Pacientes")
-                        .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Propuesta", b =>
-                {
-                    b.HasOne("Domain.Entities.Acompanante", "Acompanante")
-                        .WithMany("Propuestas")
-                        .HasForeignKey("AcompananteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.EstadoPropuesta", "EstadoPropuesta")
-                        .WithMany("Propuestas")
-                        .HasForeignKey("EstadoPropuestaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Tutor", "Tutor")
-                        .WithMany("Propuestas")
-                        .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Acompanante");
-
-                    b.Navigation("EstadoPropuesta");
-
-                    b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Tutor", b =>
-                {
-                    b.HasOne("Domain.Entities.Usuario", "Usuario")
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Tutor", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Acompanante", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.Acompanante", b =>
                 {
                     b.Navigation("DisponibilidadesSemanales");
 
-                    b.Navigation("Propuestas");
+                    b.Navigation("Especialidades");
+
+                    b.Navigation("ObrasSociales");
                 });
 
-            modelBuilder.Entity("Domain.Entities.EstadoPropuesta", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.Especialidad", b =>
                 {
-                    b.Navigation("Propuestas");
+                    b.Navigation("Acompanantes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Tutor", b =>
+            modelBuilder.Entity("TEAyudo_Acompanantes.ObraSocial", b =>
                 {
-                    b.Navigation("Pacientes");
-
-                    b.Navigation("Propuestas");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Usuario", b =>
-                {
-                    b.Navigation("EstadoUsuario")
-                        .IsRequired();
+                    b.Navigation("Acompanantes");
                 });
 #pragma warning restore 612, 618
         }
