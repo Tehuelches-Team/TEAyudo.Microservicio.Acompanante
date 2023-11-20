@@ -1,12 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class addmigratonv1 : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +25,7 @@ namespace Infraestructure.Migrations
                     Documentacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EspecialidadId = table.Column<int>(type: "int", nullable: false),
                     Experiencia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisponibilidadSemanalId = table.Column<int>(type: "int", nullable: false)
+                    Disponibilidad = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,28 +57,6 @@ namespace Infraestructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ObraSocial", x => x.ObraSocialId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DisponibilidadSemanal",
-                columns: table => new
-                {
-                    DisponibilidadSemanalId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AcompananteId = table.Column<int>(type: "int", nullable: false),
-                    DiaSemana = table.Column<int>(type: "int", nullable: false),
-                    HorarioInicio = table.Column<TimeSpan>(type: "time", nullable: false),
-                    HorarioFin = table.Column<TimeSpan>(type: "time", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DisponibilidadSemanal", x => x.DisponibilidadSemanalId);
-                    table.ForeignKey(
-                        name: "FK_DisponibilidadSemanal_Acompanante_AcompananteId",
-                        column: x => x.AcompananteId,
-                        principalTable: "Acompanante",
-                        principalColumn: "AcompananteId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,6 +107,37 @@ namespace Infraestructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Especialidad",
+                columns: new[] { "EspecialidadId", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, "Acompañamiento Escolar" },
+                    { 2, "Cuidado domiciliario" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ObraSocial",
+                columns: new[] { "ObraSocialId", "Descripcion", "Nombre" },
+                values: new object[,]
+                {
+                    { 1, "Obra Social de Empresas", "OSDE" },
+                    { 2, "Obra Social de Empresas", "Swiss Medical" },
+                    { 3, "Obra Social de Empresas", "Galeno" },
+                    { 4, "Obra Social de Empresas", "Medicus" },
+                    { 5, "Obra Social de Empresas", "OSDEPYM" },
+                    { 6, "Obra Social de Empresas", "OSPE" },
+                    { 7, "Obra Social de Empresas", "OSSEG" },
+                    { 8, "Obra Social de Empresas", "OSUT" },
+                    { 9, "Obra Social de Empresas", "OSUTHGRA" },
+                    { 10, "Obra Social de Empresas", "OSFFENTOS" },
+                    { 11, "Obra Social de Empresas", "OSFATUN" },
+                    { 12, "Obra Social de Empresas", "OSPEPBA" },
+                    { 13, "Obra Social de Empresas", "OSPSA" },
+                    { 14, "Obra Social de Empresas", "OSPS" },
+                    { 15, "Obra Social de Empresas", "OSPIA" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AcompanantesEspecialidades_EspecialidadId",
                 table: "AcompanantesEspecialidades",
@@ -137,11 +147,6 @@ namespace Infraestructure.Migrations
                 name: "IX_AcompanantesObraSocial_ObrasocialId",
                 table: "AcompanantesObraSocial",
                 column: "ObrasocialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DisponibilidadSemanal_AcompananteId",
-                table: "DisponibilidadSemanal",
-                column: "AcompananteId");
         }
 
         /// <inheritdoc />
@@ -154,16 +159,13 @@ namespace Infraestructure.Migrations
                 name: "AcompanantesObraSocial");
 
             migrationBuilder.DropTable(
-                name: "DisponibilidadSemanal");
-
-            migrationBuilder.DropTable(
                 name: "Especialidad");
 
             migrationBuilder.DropTable(
-                name: "ObraSocial");
+                name: "Acompanante");
 
             migrationBuilder.DropTable(
-                name: "Acompanante");
+                name: "ObraSocial");
         }
     }
 }

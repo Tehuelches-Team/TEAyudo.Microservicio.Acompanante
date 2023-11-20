@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.Infraestructure.Command;
 using Application.UseCase.DTOS;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
 using TEAyudo_Acompanantes;
 
 namespace Infraestructure.Command
@@ -17,12 +16,12 @@ namespace Infraestructure.Command
         async Task IAcompananteCommand.UpdateAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO)
         {
             Acompanante Acompanante = await _Context.Acompanantes.FirstOrDefaultAsync(s => s.AcompananteId == Id);
-
+            Acompanante.Disponibilidad = Int16.Parse(UsuarioAcompananteDTO.Disponibilidad);
             Acompanante.ZonaLaboral = UsuarioAcompananteDTO.ZonaLaboral;
             Acompanante.Contacto = UsuarioAcompananteDTO.Contacto;
             Acompanante.Documentacion = UsuarioAcompananteDTO.Documentacion;
             Acompanante.Experiencia = UsuarioAcompananteDTO.Experiencia;
-            _Context.SaveChanges(); 
+            _Context.SaveChanges();
         }
 
         async Task<int> IAcompananteCommand.CreateAcompanante(Acompanante AcompananteRecibido)
@@ -60,16 +59,16 @@ namespace Infraestructure.Command
             return null;
         }
 
-        async Task<Acompanante?> IAcompananteCommand.CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion)
-        {
-            DisponibilidadSemanal Disponibilidad = await _Context.DisponibilidadesSemanales.FirstAsync(s => s.DisponibilidadSemanalId == Relacion.DisponibilidadSemanalId);
-            if (Disponibilidad != null)
-            {
-                _Context.Add(Relacion);
-                await _Context.SaveChangesAsync();
-                return await _Context.Acompanantes.Include(s => s.DisponibilidadesSemanales).FirstOrDefaultAsync(s => s.AcompananteId == Relacion.AcompananteId);
-            }
-            return null;
-        }
+        //async Task<Acompanante?> IAcompananteCommand.CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion)
+        //{
+        //    DisponibilidadSemanal Disponibilidad = await _Context.DisponibilidadesSemanales.FirstAsync(s => s.DisponibilidadSemanalId == Relacion.DisponibilidadSemanalId);
+        //    if (Disponibilidad != null)
+        //    {
+        //        _Context.Add(Relacion);
+        //        await _Context.SaveChangesAsync();
+        //        return await _Context.Acompanantes.Include(s => s.DisponibilidadesSemanales).FirstOrDefaultAsync(s => s.AcompananteId == Relacion.AcompananteId);
+        //    }
+        //    return null;
+        //}
     }
 }

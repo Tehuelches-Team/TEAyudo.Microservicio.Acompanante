@@ -55,7 +55,7 @@ namespace TEAyudo_Acompanantes.Controllers
                 var Respuesta = new { Motivo = "No se encontraron obras sociales asociadas al id: " + Id };
                 return NotFound(Respuesta);
             }
-            
+
             ObraSocialResponse? ObraSocial = await _Service.UpdateObraSocial(Id, ObraSocialDTO);
 
             if (ObraSocial == null)

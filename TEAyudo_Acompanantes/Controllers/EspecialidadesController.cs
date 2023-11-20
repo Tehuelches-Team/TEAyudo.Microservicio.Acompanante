@@ -75,7 +75,7 @@ namespace TEAyudo_Acompanantes.Controllers
         {
             EspecialidadResponse? Especialidad = await _Service.CreateEspecialidad(EspecialidadDTO);
 
-            if (Especialidad==null)
+            if (Especialidad == null)
             {
                 var Respuesta = new { Motivo = "No es posible crear la especialidad ingresada, dado que ya existe una especialidad con ese nombre en la base de datos" };
                 return NotFound(Respuesta);

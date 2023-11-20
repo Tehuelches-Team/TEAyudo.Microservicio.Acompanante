@@ -1,12 +1,9 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.Application;
-using Application.UseCase.DTO;
 using Application.UseCase.DTOS;
 using Application.UseCase.Responses;
-using Application.Validation;
 using Microsoft.AspNetCore.Mvc;
 using TEAyudo.DTO;
-using TEAyudo_Acompanantes;
 
 namespace TEAyudo.Controllers
 {
@@ -15,24 +12,16 @@ namespace TEAyudo.Controllers
     public class AcompanantesController : Controller
     {
         private readonly IAcompanteService _ServiceAcompanante;
-        private readonly IDisponibilidadService _ServiceDisponibilidad;
-        public AcompanantesController(IAcompanteService ServiceAcompanante, IDisponibilidadService ServiceDisponibilidad)
+        public AcompanantesController(IAcompanteService ServiceAcompanante)
         {
-            _ServiceAcompanante = ServiceAcompanante; //Lo dejo así para que lo use Ariel
-            _ServiceDisponibilidad = ServiceDisponibilidad;
+            _ServiceAcompanante = ServiceAcompanante;
         }
 
-        [HttpGet("Filtros")] 
-        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteByFiltros(int? Id = null, int? Especialidad = null, int? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
+        [HttpGet("Filtros")]
+        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteByFiltros(int? Id = null, int? Especialidad = null, string? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
         {
-            if (Disponibilidad != null && (Disponibilidad < 1 || Disponibilidad > 6) ) //No debe de ir ya que en el front end se controlará.
-            {
-                var Respuesta = new { Motivo = "El dia de la semana debe de obedecer el rango el rango numerico [1,7]" };
-                return BadRequest(Respuesta);
-            }
-
-            List<AcompananteResponse> ListaAcompanantes = await _ServiceAcompanante.Filtrar(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
-
+            Int16 dispo = Convert.ToInt16(("000" + Disponibilidad), 2);
+            List<AcompananteResponse> ListaAcompanantes = await _ServiceAcompanante.Filtrar(Id, Especialidad, dispo, ObraSocial, ZonaLaboral);
             if (!ListaAcompanantes.Any())
             {
                 var respuesta = new { Motivo = "No se encuentran acompañantes con los requisitos buscados." };
@@ -57,14 +46,14 @@ namespace TEAyudo.Controllers
         [HttpGet("{Id}")]
         public async Task<ActionResult<AcompananteResponse>> GetAcompanantesById(int Id)
         {
-                AcompananteResponse? Disponibilidad = await _ServiceAcompanante.GetAcompanteById(Id);
-                if (Disponibilidad == null)
-                {
-                    var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                    return NotFound(Respuesta);
-                }
+            AcompananteResponse? Disponibilidad = await _ServiceAcompanante.GetAcompanteById(Id);
+            if (Disponibilidad == null)
+            {
+                var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
+                return NotFound(Respuesta);
+            }
 
-                return Ok(Disponibilidad);
+            return Ok(Disponibilidad);
         }
 
         [HttpPut("{Id}")]
@@ -79,11 +68,13 @@ namespace TEAyudo.Controllers
             {
                 AcompananteResponse AcompananteResponse = await _ServiceAcompanante.UpdateAcompante(Id, UsuarioAcompananteDTO);
                 return Ok(AcompananteResponse);
-            }catch (ConflictoException ex)
+            }
+            catch (ConflictoException ex)
             {
-                var Respuesta = new { Motivo = ex.Message};
+                var Respuesta = new { Motivo = ex.Message };
                 return Conflict(Respuesta);
-            }catch (FormatException)
+            }
+            catch (FormatException)
             {
                 var Respuesta = new { Motivo = "Se ha ingresado un formato de fecha no valida" };
                 return BadRequest(Respuesta);
@@ -93,7 +84,7 @@ namespace TEAyudo.Controllers
         [HttpPut("{Id}/Propuesta")]
         public async Task<IActionResult> PutPropuesta(int Id, int Estado) //Controlar los errores de la hora
         {
-            return Ok( await _ServiceAcompanante.PutPropuesta(Id, Estado));
+            return Ok(await _ServiceAcompanante.PutPropuesta(Id, Estado));
         }
 
 
@@ -104,7 +95,7 @@ namespace TEAyudo.Controllers
             if (Resultado)
             {
                 return new JsonResult("Acompanante registrado con exito") { StatusCode = 201 };
-            } //El error de abajo seguramente se pueda quietar
+            }
             var Respuesta = new { Motivo = "No se ha podido crear el tutor debido a que ya existe una cuenta asociada al correo electronico ingresado." };
             return Conflict(Respuesta);
         }
@@ -170,151 +161,5 @@ namespace TEAyudo.Controllers
             AcompananteResponse AcompananteResponse = await _ServiceAcompanante.DeleteAcompante(Id);
             return Ok(AcompananteResponse);
         }
-
-        //Disponibilidad
-
-        [HttpGet("Disponibilidades")]
-        public async Task<ActionResult<IEnumerable<DisponibilidadResponse>>> GetDisponibilidadesSemanales()
-        {
-            List<DisponibilidadResponse> Disponibilidad = await _ServiceDisponibilidad.GetDisponibilidades();
-            if (Disponibilidad.Count() == 0)
-            {
-                var Respuesta = new { Motivo = "No se encontraron disponibilidades semanales." };
-                return NotFound(Respuesta);
-                //Error no hay especialidades registradas aunque se supone que si o si debe de existir ya que no hay filtros.
-            }
-            return Disponibilidad; //Controlar http code
-        }
-
-        [HttpGet("Disponibilidad/{Id}")]
-        public async Task<ActionResult<DisponibilidadResponse>> GetDisponibilidadSemanal(int Id)
-        {
-            DisponibilidadResponse? Disponibilidad = await _ServiceDisponibilidad.GetDisponibilidadById(Id);
-
-            if (Disponibilidad == null)
-            {
-                var Respuesta = new { Motivo = "No se encontraron disponibilidades semanales asociadas al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-
-            return Ok(Disponibilidad);
-        }
-
-        [HttpPut("Disponibilidad/{IdAcompanante}/{IdDisponibilidad}")]
-        public async Task<IActionResult> PutDisponibilidadSemanal(int IdAcompanante,int IdDisponibilidad, DisponibilidadSemanalDTO DisponibilidadDTO) //Controlar los errores de la hora
-        {
-            try
-            {
-                ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioInicio);
-                ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioFin);
-            }
-            catch (FormatException)
-            {
-                var Respuesta = new { Motivo = "Se ha ingresado un formato de hora no valido" };
-                return BadRequest(Respuesta);
-            }
-            catch (HorarioException)
-            {
-                var Respuesta = new { Motivo = "Se ha ingresado un formato de hora no valido" };
-                return BadRequest(Respuesta);
-            }
-
-            if (!await _ServiceAcompanante.IfExist(IdAcompanante))
-            {
-                var Respuesta = new { Motivo = "No se encontro ningun acompanante asociado al id: " + IdAcompanante };
-                return NotFound(Respuesta);
-            }
-
-            if (!await _ServiceDisponibilidad.IfExist(IdDisponibilidad))
-            {
-                var Respuesta = new { Motivo = "No se encontraron disponibilidades semanales asociadas al id: " + IdDisponibilidad }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-
-            if (DisponibilidadDTO.DiaSemana<1 || DisponibilidadDTO.DiaSemana>7)
-            {
-                var Respuesta = new { Motivo = "El dia de la semana debe de obedecer el rango el rango numerico [1,7]" }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-            DisponibilidadResponse? Disponibilidad = await _ServiceDisponibilidad.UpdateDisponibilidad(IdAcompanante, IdDisponibilidad, DisponibilidadDTO);
-
-            if (Disponibilidad == null)
-            {
-                var Respuesta = new { Motivo = "La disponibilidad con id '" + IdDisponibilidad + "' no pertenece al acompanante con id '" + IdAcompanante + "'" }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }    
-            return Ok(Disponibilidad);
-            
-        }
-
-
-        [HttpPost("Disponibilidad/{IdAcompanante}")] //Controlar que el horario bajo el cual se ingresan los valores no se superponga con otro ya existente
-        public async Task<ActionResult<DisponibilidadResponse>> PostDisponibilidadSemanal(int IdAcompanante, DisponibilidadSemanalDTO DisponibilidadDTO) //Controlar los errores de la hora
-        {
-            try
-            {
-                ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioInicio);
-                ValidarHora.VerificacionHoraria(DisponibilidadDTO.HorarioFin);
-                if (DisponibilidadDTO.DiaSemana > 6 || DisponibilidadDTO.DiaSemana < 1) //¿Debería de comprobar si existe en la base de datos, no condicionarlo así?
-                {
-                    var Respuesta = new { Motivo = "El dia de la semana debe de obedecer el rango el rango numerico [1,7]" };
-                    return BadRequest(Respuesta);
-                }
-                if (!await _ServiceAcompanante.IfExist(IdAcompanante))
-                {
-                    var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + IdAcompanante };
-                    return NotFound(Respuesta);
-                }
-
-                AcompananteResponse? Acompanante = await _ServiceAcompanante.GetAcompanteById(IdAcompanante);
-                DisponibilidadResponse? Response = await _ServiceDisponibilidad.CreateDisponibilidad(IdAcompanante, DisponibilidadDTO, Acompanante);
-
-                if (Response == null)
-                {
-                    var Respuesta = new { Motivo = "El acomanante con id: " + IdAcompanante + " ya posee un horario para los dias " + DisponibilidadDTO.DiaSemana};
-                    return NotFound(Respuesta);
-                }
-                return Ok(Response);
-            }
-            catch (FormatException)
-            {
-                var Respuesta = new { Motivo = "Se ha ingresado un formato de hora no valido" };
-                return BadRequest(Respuesta);
-            }
-            catch (HorarioException ex)
-            {
-                var Respuesta = new { Motivo = ex };
-                return BadRequest(Respuesta);
-            }
-        }
-
-
-        [HttpDelete("Disponibilidad/{IdAcompanante}/{IdDisponibilidad}")]
-        public async Task<IActionResult> DeleteDisponibilidadSemanal(int IdAcompanante, int IdDisponibilidad)
-        {
-            if (!await _ServiceAcompanante.IfExist(IdAcompanante))
-            {
-                var Respuesta = new { Motivo = "No se encontraron acompanantes asociadas al id: " + IdAcompanante }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-
-            if (!await _ServiceDisponibilidad.IfExist(IdDisponibilidad))
-            {
-                var Respuesta = new { Motivo = "No se encontraron disponibilidades semales asociadas al id: " + IdDisponibilidad }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-
-            DisponibilidadResponse? Disponibilidad = await _ServiceDisponibilidad.DeleteDisponibilidad(IdAcompanante, IdDisponibilidad);
-
-            if (Disponibilidad==null)
-            {
-                var Respuesta = new { Motivo = "La disponibilidad con id '" + IdDisponibilidad + "' no pertenece al acompanante con id '" + IdAcompanante + "'"}; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
-                return NotFound(Respuesta);
-            }
-            return Ok(Disponibilidad);
-        }
-    
-    
-    
     }
 }

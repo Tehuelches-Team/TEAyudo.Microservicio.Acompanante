@@ -18,8 +18,8 @@ namespace TEAyudo.DTO
         public string Contacto { get; set; }
         public string Documentacion { get; set; }
         public string Experiencia { get; set; }
+        public string Disponibilidad { get; set; }
         public List<ObraSocialResponse> ObrasSociales { get; set; }
-        public List<DisponibilidadResponse> Disponibilidad { get; set; }
         public List<EspecialidadResponse> Especialidad { get; set; }
     }
 }

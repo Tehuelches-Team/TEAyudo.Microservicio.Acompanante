@@ -17,7 +17,6 @@ namespace Infraestructure.Querys
         {
             return await _Context.Acompanantes.Include(s => s.ObrasSociales)
                 .ThenInclude(s => s.ObraSocial)
-                .Include(s => s.DisponibilidadesSemanales)
                 .Include(s => s.Especialidades)
                 .ThenInclude(s => s.Especialidad).ToListAsync();
         }
@@ -26,12 +25,11 @@ namespace Infraestructure.Querys
         {
             return await _Context.Acompanantes.Include(s => s.ObrasSociales)
                 .ThenInclude(s => s.ObraSocial)
-                .Include(s => s.DisponibilidadesSemanales)
                 .Include(s => s.Especialidades)
                 .ThenInclude(s => s.Especialidad).FirstOrDefaultAsync(s => s.AcompananteId == Id);
         }
 
-        async Task<List<Acompanante>> IAcompananteQuery.GetAcompananteFiltros(int? Id, int? Especialidad, int? Disponibilidad, int? ObraSocial, string? ZonaLaboral)
+        async Task<List<Acompanante>> IAcompananteQuery.GetAcompananteFiltros(int? Id, int? Especialidad, Int16? Disponibilidad, int? ObraSocial, string? ZonaLaboral)
         {
             var query = _Context.Acompanantes.AsQueryable();
 
@@ -57,11 +55,10 @@ namespace Infraestructure.Querys
 
             if (Disponibilidad != null)
             {
-                query = query.Where(s => s.DisponibilidadesSemanales.Any(ds => ds.DiaSemana == Disponibilidad));
-            }
+                query = query.Where(s => (s.Disponibilidad & Disponibilidad) == Disponibilidad);
+            };
 
             return await query
-                .Include(s => s.DisponibilidadesSemanales)
                 .Include(s => s.ObrasSociales)
                     .ThenInclude(os => os.ObraSocial)
                     .ThenInclude(acom => acom.Acompanantes)

@@ -9,7 +9,7 @@ namespace Application.Interfaces.Infraestructure.Command
         Task<int> CreateAcompanante(Acompanante Acompanante);
         Task DeleteAcompanante(Acompanante Acompanante);
         Task<AcompananteObraSocial?> CreateAcompanteObraSocial(AcompananteObraSocial Relacion);
-        Task<Acompanante?> CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion);
+        //Task<Acompanante?> CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion);
         Task<AcompananteEspecialidad?> CreateAcompanteEspecialidad(AcompananteEspecialidad Relacion);
     }
 }

@@ -77,9 +77,9 @@ namespace Application.UseCase.Services
 
         async Task<EspecialidadResponse?> IEspecialidadService.CreateEspecialidad(EspecialidadDTO DescripciondDTO)
         {
-            if (await _Query.ComprobarExistencia(DescripciondDTO.Descripcion) !=null)
+            if (await _Query.ComprobarExistencia(DescripciondDTO.Descripcion) != null)
             {
-                return null; 
+                return null;
             }
 
             Especialidad Especialidad = await _Command.CreateEspecialidad(new Especialidad

@@ -25,17 +25,14 @@ builder.Services.AddDbContext<TEAyudoContext>(options =>
 });
 
 builder.Services.AddTransient<IAcompanteService, AcompananteService>();
-builder.Services.AddTransient<IDisponibilidadService, DisponibilidadService>();
 builder.Services.AddTransient<IEspecialidadService, EspecialidadService>();
 builder.Services.AddTransient<IObraSocialService, ObraSocialService>();
 builder.Services.AddTransient<IAcompananteCommand, AcompananteCommand>();
-builder.Services.AddTransient<IDisponibilidadCommand, DisponibilidadCommand>();
 builder.Services.AddTransient<IEspecialidadCommand, EspecialidadCommand>();
 builder.Services.AddTransient<IObraSocialCommand, ObraSocialCommand>();
 builder.Services.AddTransient<IAcompananteQuery, AcompananteQuery>();
 builder.Services.AddTransient<IEspecialidadQuery, EspecialidadQuery>();
 builder.Services.AddTransient<IObraSocialQuery, ObraSocialQuery>();
-builder.Services.AddTransient<IDisponibilidadQuery, DisponibilidadQuery>();
 builder.Services.AddTransient<ICreateAcompananteResponse, CreateAcompananteResponse>();
 builder.Services.AddTransient<IUsuarioCommand, UsuarioCommand>();
 builder.Services.AddTransient<IUsuarioQuery, UsuarioQuery>();
