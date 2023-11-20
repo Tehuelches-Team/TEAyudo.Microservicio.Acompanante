@@ -18,7 +18,7 @@ namespace TEAyudo_Acompanantes.Controllers
 
         // GET: api/Especialidades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EspecialidadResponse>>> GetEspecialidades() //Busco y entrego todas las especialidades
+        public async Task<ActionResult<IEnumerable<EspecialidadResponse>>> GetEspecialidades() 
         {
             List<EspecialidadResponse> Especialidades = await _Service.GetEspecialidades();
 
@@ -28,12 +28,12 @@ namespace TEAyudo_Acompanantes.Controllers
                 return NotFound(Respuesta);
             }
 
-            return Especialidades; //Controlar http code
+            return Especialidades; 
         }
 
         // GET: api/Especialidades/5
         [HttpGet("{Id}")]
-        public async Task<ActionResult<EspecialidadResponse>> GetEspecialidad(int Id) //Busco y devuelvo una especialidad en concreto
+        public async Task<ActionResult<EspecialidadResponse>> GetEspecialidad(int Id) 
         {
             EspecialidadResponse Especialidad = await _Service.GetEspecialidadById(Id);
 
@@ -48,8 +48,8 @@ namespace TEAyudo_Acompanantes.Controllers
 
         // PUT: api/Especialidades/5
         [HttpPut("{Id}")]
-        public async Task<IActionResult> PutEspecialidad(int Id, EspecialidadDTO EspecialidadDTO) //Actualizo la informacion de una especialidad acorde el id ingresado
-        {//Comprobar que exista el id, y después ir y eliminarlo. 
+        public async Task<IActionResult> PutEspecialidad(int Id, EspecialidadDTO EspecialidadDTO) 
+        { 
 
             if (!await _Service.IfExist(Id))
             {
@@ -65,13 +65,11 @@ namespace TEAyudo_Acompanantes.Controllers
             }
 
             return Ok(Especialidad);
-
-            // catch (DbUpdateConcurrencyException)
         }
 
 
         [HttpPost]
-        public async Task<ActionResult> PostEspecialidad(EspecialidadDTO EspecialidadDTO) //Se crea una nueva especialidad
+        public async Task<ActionResult> PostEspecialidad(EspecialidadDTO EspecialidadDTO) 
         {
             EspecialidadResponse? Especialidad = await _Service.CreateEspecialidad(EspecialidadDTO);
 
@@ -86,7 +84,7 @@ namespace TEAyudo_Acompanantes.Controllers
 
         // DELETE: api/Especialidades/5
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteEspecialidad(int Id) //Busco y elimino una especialidad acorde el id
+        public async Task<IActionResult> DeleteEspecialidad(int Id) 
         {
             if (!await _Service.IfExist(Id))
             {

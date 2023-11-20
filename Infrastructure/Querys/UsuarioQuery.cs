@@ -13,7 +13,6 @@ namespace Infraestructure.Querys
             var Client = new RestClient("https://localhost:7174");
             var Resquest = new RestRequest("/api/Usuario");
             RestResponse Response = await Client.ExecuteGetAsync(Resquest);
-            //return await Client.GetJsonAsync<List<UsuarioResponse>>("/api/Usuario");
             if (Response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;

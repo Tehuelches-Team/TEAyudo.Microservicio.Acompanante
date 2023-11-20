@@ -38,9 +38,8 @@ namespace TEAyudo.Controllers
             {
                 var Respuesta = new { Motivo = "No se encontraron acompanantes registrados." };
                 return NotFound(Respuesta);
-                //Error no hay especialidades registradas aunque se supone que si o si debe de existir ya que no hay filtros.
             }
-            return Disponibilidad; //Controlar http code
+            return Disponibilidad; 
         }
 
         [HttpGet("{Id}")]
@@ -49,7 +48,7 @@ namespace TEAyudo.Controllers
             AcompananteResponse? Disponibilidad = await _ServiceAcompanante.GetAcompanteById(Id);
             if (Disponibilidad == null)
             {
-                var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
+                var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id };
                 return NotFound(Respuesta);
             }
 
@@ -57,7 +56,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPut("{Id}")]
-        public async Task<IActionResult> PutAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO) //Controlar los errores de la hora
+        public async Task<IActionResult> PutAcompanante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO) 
         {
             if (!await _ServiceAcompanante.IfExist(Id))
             {
@@ -82,16 +81,16 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPut("{Id}/Propuesta")]
-        public async Task<IActionResult> PutPropuesta(int Id, int Estado) //Controlar los errores de la hora
+        public async Task<IActionResult> PutPropuesta(int Id, int Estado) 
         {
             return Ok(await _ServiceAcompanante.PutPropuesta(Id, Estado));
         }
 
 
         [HttpPost("Acompanante")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompanante(AcompananteDTO AcompananteDTO) //Controlar los errores de la hora
+        public async Task<ActionResult<AcompananteResponse>> PostAcompanante(AcompananteDTO AcompananteDTO) 
         {
-            bool Resultado = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); //Comprobar que el medio de comunicación no se encuentre registrado
+            bool Resultado = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); 
             if (Resultado)
             {
                 return new JsonResult("Acompanante registrado con exito") { StatusCode = 201 };
@@ -101,7 +100,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPost("Relacion/Acompanante/ObraSocial")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompananteObraSocial(AcompananteObraSocialDTO AcompananteObraSocialDTO) //Controlar los errores de la hora
+        public async Task<ActionResult<AcompananteResponse>> PostAcompananteObraSocial(AcompananteObraSocialDTO AcompananteObraSocialDTO) 
         {
             if (!await _ServiceAcompanante.IfExist(AcompananteObraSocialDTO.AcompananteId))
             {
@@ -126,7 +125,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPost("Relacion/Acompanante/Especialidad")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompananteEspecialidad(AcompananteEspecialidadDTO AcompananteEspecialidadDTO) //Controlar los errores de la hora
+        public async Task<ActionResult<AcompananteResponse>> PostAcompananteEspecialidad(AcompananteEspecialidadDTO AcompananteEspecialidadDTO) 
         {
             if (!await _ServiceAcompanante.IfExist(AcompananteEspecialidadDTO.AcompananteId))
             {
@@ -155,7 +154,7 @@ namespace TEAyudo.Controllers
         {
             if (!await _ServiceAcompanante.IfExist(Id))
             {
-                var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; //Único caso permitido por swagger, ingresar una fecha con formato que luego no se pueda convertir en Datetime
+                var Respuesta = new { Motivo = "No se encontraron acompanantes asociados al id: " + Id }; 
                 return NotFound(Respuesta);
             }
             AcompananteResponse AcompananteResponse = await _ServiceAcompanante.DeleteAcompante(Id);
