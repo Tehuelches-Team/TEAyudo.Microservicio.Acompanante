@@ -76,9 +76,9 @@ namespace Application.UseCase.Services
             return await _CreateResponse.CreateAcompananteResponse(Acompanante, UsuarioResponse); //Falta el usuarios
         }
 
-        async Task<bool> IAcompanteService.CreateAcompante(AcompananteDTO AcompananteRecibido)
+        async Task<int> IAcompanteService.CreateAcompante(AcompananteDTO AcompananteRecibido)
         {
-            await _AcompananteCommand.CreateAcompanante(new Acompanante
+            int id = await _AcompananteCommand.CreateAcompanante(new Acompanante
             {
                 UsuarioId = AcompananteRecibido.UsuarioId,
                 ZonaLaboral = AcompananteRecibido.ZonaLaboral,
@@ -87,7 +87,7 @@ namespace Application.UseCase.Services
                 Experiencia = AcompananteRecibido.Experiencia,
                 Disponibilidad = Convert.ToInt16(("000" + AcompananteRecibido.Disponibilidad), 2),
             });
-            return true;
+            return id;
         }
 
         async Task<AcompananteResponse> IAcompanteService.DeleteAcompante(int Id)

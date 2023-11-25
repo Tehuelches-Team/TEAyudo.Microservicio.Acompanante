@@ -90,10 +90,14 @@ namespace TEAyudo.Controllers
         [HttpPost("Acompanante")]
         public async Task<ActionResult<AcompananteResponse>> PostAcompanante(AcompananteDTO AcompananteDTO) 
         {
-            bool Resultado = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); 
-            if (Resultado)
+            int? result = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); 
+            if (result != null)
             {
-                return new JsonResult("Acompanante registrado con exito") { StatusCode = 201 };
+                var ObjetoAnonimo = new
+                {
+                    AcompananteId = result
+                };
+                return new JsonResult(ObjetoAnonimo) { StatusCode = 201 };
             }
             var Respuesta = new { Motivo = "No se ha podido crear el tutor debido a que ya existe una cuenta asociada al correo electronico ingresado." };
             return Conflict(Respuesta);

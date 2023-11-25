@@ -12,7 +12,7 @@ namespace Application.Interfaces.Application
         Task<AcompananteResponse?> GetAcompanteById(int Id);
         Task<bool> IfExist(int Id);
         Task<AcompananteResponse> UpdateAcompante(int Id, UsuarioAcompananteDTO UsuarioAcompananteDTO);
-        Task<bool> CreateAcompante(AcompananteDTO Acompante);
+        Task<int> CreateAcompante(AcompananteDTO Acompante);
         Task<AcompananteResponse> DeleteAcompante(int Id);
         Task<AcompananteObraSocialResponse?> CreateAcompanteObraSocial(AcompananteObraSocialDTO Relacion);
         //Task<AcompananteDisponibilidadSemanalResponse?> CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion);
