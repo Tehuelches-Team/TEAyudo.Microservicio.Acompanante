@@ -38,7 +38,7 @@ builder.Services.AddTransient<IUsuarioCommand, UsuarioCommand>();
 builder.Services.AddTransient<IUsuarioQuery, UsuarioQuery>();
 builder.Services.AddTransient<IPropuestaCommand, PropuestaCommand>();
 
-builder.Services.AddCors(x => x.AddDefaultPolicy(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()))
+builder.Services.AddCors(x => x.AddDefaultPolicy(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()));
 
 var app = builder.Build();
 
