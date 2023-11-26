@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.Infraestructure.Query;
 using Microsoft.EntityFrameworkCore;
 using TEAyudo_Acompanantes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infraestructure.Querys
 {

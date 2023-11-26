@@ -9,7 +9,6 @@ public class TEAyudoContext : DbContext
     public DbSet<ObraSocial> ObrasSociales { get; set; }
     public DbSet<AcompananteEspecialidad> AcompanantesEspecialidades { get; set; }
     public DbSet<AcompananteObraSocial> AcompanantesObraSocial { get; set; }
-    public DbSet<DisponibilidadSemanal> DisponibilidadesSemanales { get; set; }
 
     public TEAyudoContext(DbContextOptions<TEAyudoContext> options) : base(options)
     {
@@ -22,10 +21,6 @@ public class TEAyudoContext : DbContext
             entity.ToTable("Acompanante");
             entity.HasKey(a => a.AcompananteId);
             entity.Property(a => a.AcompananteId).ValueGeneratedOnAdd().IsRequired();
-            entity.HasMany<DisponibilidadSemanal>(a => a.DisponibilidadesSemanales)
-            .WithOne(ds => ds.Acompanante)
-            .HasForeignKey(ds => ds.AcompananteId)
-            .OnDelete(DeleteBehavior.Cascade);
             entity.HasMany<AcompananteEspecialidad>(a => a.Especialidades)
            .WithOne(ds => ds.Acompanante)
            .HasForeignKey(ds => ds.AcompananteId)
@@ -36,8 +31,8 @@ public class TEAyudoContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<AcompananteEspecialidad>(entity => 
-        { 
+        modelBuilder.Entity<AcompananteEspecialidad>(entity =>
+        {
             entity.HasKey(a => new { a.AcompananteId, a.EspecialidadId });
             entity.HasOne<Acompanante>(s => s.Acompanante)
             .WithMany(s => s.Especialidades)
@@ -79,17 +74,6 @@ public class TEAyudoContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<DisponibilidadSemanal>(entity =>
-        {
-            entity.ToTable("DisponibilidadSemanal");
-            entity.HasKey(d => d.DisponibilidadSemanalId);
-            entity.HasOne<Acompanante>(s => s.Acompanante)
-            .WithMany(s => s.DisponibilidadesSemanales)
-            .HasForeignKey(s => s.AcompananteId)
-            .OnDelete(DeleteBehavior.Cascade);
-        });
-
-
 
         modelBuilder.Entity<ObraSocial>().HasData(
             new ObraSocial { ObraSocialId = 1, Nombre = "OSDE", Descripcion = "Obra Social de Empresas" },
@@ -106,11 +90,11 @@ public class TEAyudoContext : DbContext
             new ObraSocial { ObraSocialId = 12, Nombre = "OSPEPBA", Descripcion = "Obra Social de Empresas" },
             new ObraSocial { ObraSocialId = 13, Nombre = "OSPSA", Descripcion = "Obra Social de Empresas" },
             new ObraSocial { ObraSocialId = 14, Nombre = "OSPS", Descripcion = "Obra Social de Empresas" },
-            new ObraSocial { ObraSocialId = 15, Nombre = "OSPIA", Descripcion = "Obra Social de Empresas" }                       
+            new ObraSocial { ObraSocialId = 15, Nombre = "OSPIA", Descripcion = "Obra Social de Empresas" }
         );
 
         modelBuilder.Entity<Especialidad>().HasData(
-            
+
             new Especialidad { EspecialidadId = 1, Descripcion = "Acompañamiento Escolar" },
             new Especialidad { EspecialidadId = 2, Descripcion = "Cuidado domiciliario" }
              );

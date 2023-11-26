@@ -25,10 +25,10 @@ namespace TEAyudo_Acompanantes.Controllers
             {
                 var Respuesta = new { Motivo = "No se encontraron obras sociales registradas en la base de datos" };
                 return NotFound(Respuesta);
-                //Error no hay especialidades registradas aunque se supone que si o si debe de existir ya que no hay filtros.
+                
             }
 
-            return ObraSociales; //Controlar http code
+            return ObraSociales;
         }
 
 
@@ -55,7 +55,7 @@ namespace TEAyudo_Acompanantes.Controllers
                 var Respuesta = new { Motivo = "No se encontraron obras sociales asociadas al id: " + Id };
                 return NotFound(Respuesta);
             }
-            
+
             ObraSocialResponse? ObraSocial = await _Service.UpdateObraSocial(Id, ObraSocialDTO);
 
             if (ObraSocial == null)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.UseCase.DTOS
+﻿namespace Application.UseCase.DTOS
 {
     public class UsuarioAcompananteDTO
     {
@@ -20,5 +14,6 @@ namespace Application.UseCase.DTOS
         public string Contacto { get; set; }
         public string Documentacion { get; set; }
         public string Experiencia { get; set; }
+        public string Disponibilidad { get; set; }
     }
 }

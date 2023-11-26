@@ -9,8 +9,7 @@ public class Acompanante
     public string Documentacion { get; set; }
     public int EspecialidadId { get; set; }
     public string Experiencia { get; set; }
-    public int DisponibilidadSemanalId { get; set; }
+    public Int16 Disponibilidad { get; set; }
     public ICollection<AcompananteObraSocial> ObrasSociales { get; set; }
     public ICollection<AcompananteEspecialidad> Especialidades { get; set; }
-    public ICollection<DisponibilidadSemanal> DisponibilidadesSemanales { get; set; }
 }

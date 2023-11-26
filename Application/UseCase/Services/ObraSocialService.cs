@@ -59,14 +59,14 @@ namespace Application.UseCase.Services
         async Task<ObraSocialResponse?> IObraSocialService.UpdateObraSocial(int Id, ObraSocialDTO ObraSocialDTO)
         {
             ObraSocial? ObraSocial = await _Query.ComprobarExistencia(ObraSocialDTO.Nombre);
-            if (ObraSocial != null && ObraSocial.ObraSocialId!=Id)
+            if (ObraSocial != null && ObraSocial.ObraSocialId != Id)
             {
                 return null;
             }
 
             await _Command.UpdateObraSocial(new ObraSocial
             {
-                ObraSocialId=Id,
+                ObraSocialId = Id,
                 Nombre = ObraSocialDTO.Nombre,
                 Descripcion = ObraSocialDTO.Descripcion,
             });

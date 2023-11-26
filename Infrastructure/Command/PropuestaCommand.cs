@@ -1,12 +1,7 @@
 ﻿using Application.Interfaces.Infraestructure.Command;
 using Application.Model.Response;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using TEAyudo_Acompanantes;
 
 namespace Infraestructure.Command
@@ -14,7 +9,7 @@ namespace Infraestructure.Command
     public class PropuestaCommand : IPropuestaCommand
     {
         private readonly TEAyudoContext Context;
-        public PropuestaCommand (TEAyudoContext Context)
+        public PropuestaCommand(TEAyudoContext Context)
         {
             this.Context = Context;
         }
@@ -22,7 +17,6 @@ namespace Infraestructure.Command
         {
             var Client = new RestClient("https://localhost:7231");
             var Request = new RestRequest("/api/Propuesta/" + Id + "/" + Estado);
-            //Request.AddJsonBody(Estado.ToString()); //Ver porque deja String y no int. 
             RestResponse Result = await Client.ExecutePutAsync<PropuestaResponse>(Request);
             PropuestaResponse Response = JsonSerializer.Deserialize<PropuestaResponse>(Result.Content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return Response;

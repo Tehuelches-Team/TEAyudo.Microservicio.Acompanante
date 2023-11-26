@@ -1,11 +1,6 @@
 ﻿using Application.Interfaces.Application;
 using Application.UseCase.DTO;
 using Application.UseCase.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TEAyudo.DTO;
 using TEAyudo_Acompanantes;
 
@@ -16,7 +11,6 @@ namespace Application.UseCase.CrearUsuarioAcompante
         async Task<AcompananteResponse> ICreateAcompananteResponse.CreateAcompananteResponse(Acompanante Acompanante, UsuarioResponse Usuario)
         {
             List<ObraSocialResponse> ListaObrasSociales = new List<ObraSocialResponse>();
-            List<DisponibilidadResponse> ListaDisponibilidades = new List<DisponibilidadResponse>();
             List<EspecialidadResponse> ListaEspecialidades = new List<EspecialidadResponse>();
             foreach (var Single in Acompanante.Especialidades)
             {
@@ -37,35 +31,30 @@ namespace Application.UseCase.CrearUsuarioAcompante
                 });
             }
 
-            foreach (var Single in Acompanante.DisponibilidadesSemanales)
+            string aux = Convert.ToString(Acompanante.Disponibilidad, 2);
+            while (aux.Length < 12)
             {
-                ListaDisponibilidades.Add(new DisponibilidadResponse
-                {
-                    DisponibilidadSemanalId = Single.DisponibilidadSemanalId,
-                    DiaSemana = Single.DiaSemana,
-                    HorarioInicio = Single.HorarioInicio.ToString(@"hh\:mm"),
-                    HorarioFin = Single.HorarioFin.ToString(@"hh\:mm"),
-                });
+                aux = "0" + aux;
             }
 
             return (new AcompananteResponse
             {
-                UsuarioId=Usuario.UsuarioId,
-                Nombre=Usuario.Nombre,
-                Apellido=Usuario.Apellido,
-                Domicilio=Usuario.Domicilio,
-                FechaNacimiento=Usuario.FechaNacimiento,
-                FotoPerfil=Usuario.FotoPerfil,
+                UsuarioId = Usuario.UsuarioId,
+                Nombre = Usuario.Nombre,
+                Apellido = Usuario.Apellido,
+                Domicilio = Usuario.Domicilio,
+                FechaNacimiento = Usuario.FechaNacimiento,
+                FotoPerfil = Usuario.FotoPerfil,
                 CorreoElectronico = Usuario.CorreoElectronico,
                 Contrasena = Usuario.Contrasena,
-                EstadoUsuarioId =Usuario.EstadoUsuarioId,
+                EstadoUsuarioId = Usuario.EstadoUsuarioId,
                 AcompananteId = Acompanante.AcompananteId,
                 ZonaLaboral = Acompanante.ZonaLaboral,
                 Contacto = Acompanante.Contacto,
                 Documentacion = Acompanante.Documentacion,
                 Experiencia = Acompanante.Experiencia,
+                Disponibilidad = aux,
                 ObrasSociales = ListaObrasSociales,
-                Disponibilidad = ListaDisponibilidades,
                 Especialidad = ListaEspecialidades,
             });
 
@@ -81,7 +70,6 @@ namespace Application.UseCase.CrearUsuarioAcompante
                     if (Usuario.UsuarioId == Acompanante.UsuarioId)
                     {
                         List<ObraSocialResponse> ListaObrasSociales = new List<ObraSocialResponse>();
-                        List<DisponibilidadResponse> ListaDisponibilidades = new List<DisponibilidadResponse>();
                         List<EspecialidadResponse> ListaEspecialidades = new List<EspecialidadResponse>();
                         foreach (var Single in Acompanante.Especialidades)
                         {
@@ -101,16 +89,10 @@ namespace Application.UseCase.CrearUsuarioAcompante
                                 Descripcion = Single.ObraSocial.Descripcion,
                             });
                         }
-
-                        foreach (var Single in Acompanante.DisponibilidadesSemanales)
+                        string aux = Convert.ToString(Acompanante.Disponibilidad, 2);
+                        while (aux.Length < 12)
                         {
-                            ListaDisponibilidades.Add(new DisponibilidadResponse
-                            {
-                                DisponibilidadSemanalId = Single.DisponibilidadSemanalId,
-                                DiaSemana = Single.DiaSemana,
-                                HorarioInicio = Single.HorarioInicio.ToString(@"hh\:mm"),
-                                HorarioFin = Single.HorarioFin.ToString(@"hh\:mm"),
-                            });
+                            aux = "0" + aux;
                         }
 
                         ResultadosAcompanantes.Add(new AcompananteResponse
@@ -129,8 +111,8 @@ namespace Application.UseCase.CrearUsuarioAcompante
                             Contacto = Acompanante.Contacto,
                             Documentacion = Acompanante.Documentacion,
                             Experiencia = Acompanante.Experiencia,
+                            Disponibilidad = aux,
                             ObrasSociales = ListaObrasSociales,
-                            Disponibilidad = ListaDisponibilidades,
                             Especialidad = ListaEspecialidades,
                         });
                     }

@@ -1,11 +1,4 @@
-﻿using Application.UseCase.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.UseCase.Responses
+﻿namespace Application.UseCase.Responses
 {
     public class AcompananteDisponibilidadSemanalResponse
     {
@@ -14,6 +7,6 @@ namespace Application.UseCase.Responses
         public string Contacto { get; set; }
         public string Documentacion { get; set; }
         public string Experiencia { get; set; }
-        public List<DisponibilidadResponse> Disponibilidades { get; set; }
+        public string Disponibilidad { get; set; }
     }
 }
