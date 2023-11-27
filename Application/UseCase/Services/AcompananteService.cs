@@ -139,32 +139,8 @@ namespace Application.UseCase.Services
             };
         }
 
-        //async Task<AcompananteDisponibilidadSemanalResponse?> IAcompanteService.CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion)
-        //{
-        //    Acompanante? Acompanante = await _AcompananteCommand.CreateAcompanteDisponibilidad(Relacion);
 
-        //    if (Acompanante == null) return null;
-        //    List<DisponibilidadResponse> Disponbilidades = new List<DisponibilidadResponse>();
-        //    foreach (var item in Acompanante.DisponibilidadesSemanales)
-        //    {
-        //        Disponbilidades.Add(new DisponibilidadResponse
-        //        {
-        //            DisponibilidadSemanalId = item.DisponibilidadSemanalId,
-        //            DiaSemana=item.DiaSemana,
-        //            HorarioInicio=item.HorarioInicio.ToString(@"hh\:mm"),
-        //            HorarioFin=item.HorarioFin.ToString(@"hh\:mm"),
-        //        });
-        //    }
-        //    return new AcompananteDisponibilidadSemanalResponse
-        //    {
-        //        AcompananteId = Acompanante.AcompananteId,
-        //        Contacto = Acompanante.Contacto,
-        //        ZonaLaboral =Acompanante.ZonaLaboral,
-        //        Documentacion=Acompanante.Documentacion,
-        //        Experiencia=Acompanante.Experiencia,
-        //        Disponibilidades = Disponbilidades,
-        //    };
-        //}
+
 
         async Task<AcompananteEspecialidadResponse?> IAcompanteService.CreateAcompanteEspecialidad(AcompananteEspecialidadDTO Relacion)
         {
@@ -208,6 +184,11 @@ namespace Application.UseCase.Services
         {
             PropuestaResponse PropuestaResponse = await _PropuestaCommand.PutPropuesta(Id, Estado);
             return PropuestaResponse;
+        }
+
+        public Task<int> GetATIdbyUsuarioId(int UsuarioId)
+        {
+            return _AcompananteQuery.GetAcompananteIdByUsuarioId(UsuarioId);
         }
     }
 }
