@@ -71,7 +71,7 @@ namespace Infraestructure.Querys
         public async Task<int> GetAcompananteIdByUsuarioId(int Id)
         {
             Acompanante? AT = await _Context.Acompanantes.FirstOrDefaultAsync(s => s.UsuarioId == Id);
-            return AT.UsuarioId;
+            return AT.AcompananteId;
         }
     }
 }
