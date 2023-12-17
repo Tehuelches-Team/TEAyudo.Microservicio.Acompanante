@@ -25,7 +25,7 @@ namespace TEAyudo.Controllers
             if (!ListaAcompanantes.Any())
             {
                 var respuesta = new { Motivo = "No se encuentran acompañantes con los requisitos buscados." };
-                return NotFound(respuesta);
+                return new JsonResult(respuesta) { StatusCode = 404 };
             }
             return Ok(ListaAcompanantes);
         }
@@ -39,7 +39,20 @@ namespace TEAyudo.Controllers
                 var Respuesta = new { Motivo = "No se encontraron acompanantes registrados." };
                 return NotFound(Respuesta);
             }
-            return Disponibilidad; 
+            return Ok(Disponibilidad);
+        }
+
+        [HttpGet ("Id/{UsuarioId}")]
+        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteId(int UsuarioId)
+        {
+            int? response = await _ServiceAcompanante.GetATIdbyUsuarioId(UsuarioId);
+            if (response == null)
+            {
+                var Respuesta = new { Motivo = "No se encontraron acompanantes registrados." };
+                return NotFound(Respuesta);
+            }
+            var AT = new { Id = response };
+            return Ok(AT);
         }
 
         [HttpGet("{Id}")]

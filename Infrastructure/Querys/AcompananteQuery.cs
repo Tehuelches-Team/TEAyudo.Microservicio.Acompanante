@@ -67,5 +67,11 @@ namespace Infraestructure.Querys
                     .ThenInclude(es => es.Especialidad)
                 .ToListAsync();
         }
+
+        public async Task<int> GetAcompananteIdByUsuarioId(int Id)
+        {
+            Acompanante? AT = await _Context.Acompanantes.FirstOrDefaultAsync(s => s.UsuarioId == Id);
+            return AT.AcompananteId;
+        }
     }
 }

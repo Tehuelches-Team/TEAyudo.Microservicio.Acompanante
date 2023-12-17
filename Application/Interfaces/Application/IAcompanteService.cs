@@ -15,8 +15,8 @@ namespace Application.Interfaces.Application
         Task<int> CreateAcompante(AcompananteDTO Acompante);
         Task<AcompananteResponse> DeleteAcompante(int Id);
         Task<AcompananteObraSocialResponse?> CreateAcompanteObraSocial(AcompananteObraSocialDTO Relacion);
-        //Task<AcompananteDisponibilidadSemanalResponse?> CreateAcompanteDisponibilidad(AcompananteDisponibilidadDTO Relacion);
         Task<AcompananteEspecialidadResponse?> CreateAcompanteEspecialidad(AcompananteEspecialidadDTO Relacion);
         Task<PropuestaResponse> PutPropuesta(int id, int Estado);
+        Task<int> GetATIdbyUsuarioId(int UsuarioId);
     }
 }
