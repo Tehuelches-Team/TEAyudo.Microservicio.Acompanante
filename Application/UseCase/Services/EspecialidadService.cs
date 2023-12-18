@@ -57,7 +57,7 @@ namespace Application.UseCase.Services
         async Task<EspecialidadResponse?> IEspecialidadService.UpdateEspecialidad(int Id, EspecialidadDTO DescripciondDTO)
         {
             Especialidad? Especialidad = await _Query.ComprobarExistencia(DescripciondDTO.Descripcion);
-            if (Especialidad != null && Especialidad.EspecialidadId != Id)
+            if (Especialidad==null || Especialidad.EspecialidadId != Id)
             {
                 return null;
             }
