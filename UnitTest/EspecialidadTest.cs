@@ -4,11 +4,6 @@ using Application.Interfaces.Infraestructure.Query;
 using Application.UseCase.DTOS;
 using Application.UseCase.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TEAyudo_Acompanantes;
 
 namespace UnitTest

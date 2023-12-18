@@ -5,11 +5,6 @@ using Application.UseCase.DTO;
 using Application.UseCase.DTOS;
 using Application.UseCase.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TEAyudo_Acompanantes;
 
 namespace UnitTest
@@ -127,13 +122,6 @@ namespace UnitTest
 
             IObraSocialService service = new ObraSocialService(mockObraSocialesCommand.Object, mockObraSocialesQuery.Object);
 
-            var obraSocial = new ObraSocial
-            {
-                ObraSocialId = 1,
-                Nombre = "OSDE",
-                Descripcion = "Con cada argentino siempre"
-            };
-
             mockObraSocialesQuery.Setup(q => q.GetObraSocialById(It.IsAny<int>()));
 
             //Act
@@ -189,16 +177,7 @@ namespace UnitTest
                 Descripcion = "Con cada argentino siempre"
             };
 
-            var obraSocial = new ObraSocial
-            {
-                ObraSocialId = 1,
-                Nombre = "OSDE",
-                Descripcion = "Con cada argentino siempre"
-            };
-
             mockObraSocialesQuery.Setup(q => q.ComprobarExistencia(It.IsAny<string>()));
-
-            mockObraSocialesCommand.Setup(q => q.UpdateObraSocial(It.IsAny<ObraSocial>()));
 
             //Act
             var result = await service.UpdateObraSocial(2, obraSocialDTO);
@@ -260,9 +239,7 @@ namespace UnitTest
                 Descripcion = "Con cada argentino siempre"
             };
 
-            mockObraSocialesQuery.Setup(q => q.ComprobarExistencia(It.IsAny<string>())).ReturnsAsync(obraSocial);
-
-            mockObraSocialesCommand.Setup(q => q.CreateObraSocial(It.IsAny<ObraSocial>()));
+            mockObraSocialesQuery.Setup(q => q.ComprobarExistencia(It.IsAny<string>())).ReturnsAsync(obraSocial); //Si existe devuelve null
 
             //Act
             var result = await service.CreateObraSocial(obraSocialDTO);

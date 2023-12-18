@@ -402,6 +402,80 @@ namespace UnitTest
                 Especialidades = new List<AcompananteEspecialidad>(),
             };
 
+            var primerEspecialidad = new Especialidad
+            {
+                EspecialidadId = 1,
+                Descripcion = "Muy buen cuidado",
+            };
+
+            var segundaEspecialidad = new Especialidad
+            {
+                EspecialidadId = 2,
+                Descripcion = "excelente cuidado",
+            };
+
+            var primerATEspecialidad = new AcompananteEspecialidad
+            {
+                AcompananteId = 1,
+                Acompanante = Acompanante,
+                EspecialidadId = 1,
+                Especialidad = primerEspecialidad,
+            };
+
+            primerEspecialidad.Acompanantes = new List<AcompananteEspecialidad> { primerATEspecialidad };
+
+            Acompanante.Especialidades.Add(primerATEspecialidad);
+
+            var segundoATEspecialidad = new AcompananteEspecialidad
+            {
+                AcompananteId = 1,
+                Acompanante = Acompanante,
+                EspecialidadId = 2,
+                Especialidad = segundaEspecialidad,
+            };
+
+            segundaEspecialidad.Acompanantes = new List<AcompananteEspecialidad> { segundoATEspecialidad };
+
+            Acompanante.Especialidades.Add(segundoATEspecialidad);
+
+            var primerObraSocial = new ObraSocial
+            {
+                ObraSocialId = 1,
+                Nombre = "Soap",
+                Descripcion = "La mejor",
+            };
+
+            var SegundaObraSocial = new ObraSocial
+            {
+                ObraSocialId = 2,
+                Nombre = "Tomato",
+                Descripcion = "Potato",
+            };
+
+            var primerRelacionATObraSocial = new AcompananteObraSocial
+            {
+                AcompananteId = 1,
+                Acompanante = Acompanante,
+                ObrasocialId = 2,
+                ObraSocial = SegundaObraSocial,
+            };
+
+            SegundaObraSocial.Acompanantes = new List<AcompananteObraSocial> { primerRelacionATObraSocial };
+
+            Acompanante.ObrasSociales.Add(primerRelacionATObraSocial);
+
+            var segundaRelacionATObraSocial = new AcompananteObraSocial
+            {
+                AcompananteId = 1,
+                Acompanante = Acompanante,
+                ObrasocialId = 1,
+                ObraSocial = primerObraSocial,
+            };
+
+            primerObraSocial.Acompanantes = new List<AcompananteObraSocial> { segundaRelacionATObraSocial };
+
+            Acompanante.ObrasSociales.Add(segundaRelacionATObraSocial);
+
             mockAcompananteQuery.Setup(q => q.GetAcompananteById(1)).ReturnsAsync(Acompanante);
 
             //Act
@@ -418,28 +492,12 @@ namespace UnitTest
             //Arrange 
             var mockAcompananteCommand = new Mock<IAcompananteCommand>();
             var mockAcompananteQuery = new Mock<IAcompananteQuery>();
-            //var mockCreateResponse = new Mock<ICreateAcompananteResponse>();
             ICreateAcompananteResponse mapping = new CreateAcompananteResponse();
             var mockUsuarioCommand = new Mock<IUsuarioCommand>();
             var mockUsuarioQuery = new Mock<IUsuarioQuery>();
             var mockPropuestaCommand = new Mock<IPropuestaCommand>();
 
             IAcompanteService service = new AcompananteService(mockAcompananteCommand.Object, mockAcompananteQuery.Object, mapping, mockUsuarioCommand.Object, mockUsuarioQuery.Object, mockPropuestaCommand.Object);
-
-            var Usuario = new UsuarioResponse
-            {
-                UsuarioId = 1,
-                Nombre = "Antoine",
-                Apellido = "Griezmann",
-                CorreoElectronico = "Antoine@gmail.com",
-                Contrasena = "Grizzi7",
-                FotoPerfil = "https://i0.wp.com/www.lacolinadenervion.com/wp-content/uploads/2023/09/atletico-madrid-v-real-madrid-cf-laliga-ea-sports-scaled.jpg?fit=800%2C533&ssl=1",
-                Domicilio = "Madrid",
-                FechaNacimiento = "21/03/1991",
-                EstadoUsuarioId = 1
-            };
-
-            mockUsuarioQuery.Setup(q => q.GetUsuarioById(1)).ReturnsAsync(Usuario);
 
             var Acompanante = new Acompanante
             {
@@ -456,13 +514,12 @@ namespace UnitTest
                 Especialidades = new List<AcompananteEspecialidad>(),
             };
 
-            mockAcompananteQuery.Setup(q => q.GetAcompananteById(1)).ReturnsAsync(Acompanante);
+            mockAcompananteQuery.Setup(q => q.GetAcompananteById(It.IsAny<int>()));
 
             //Act
             var result = await service.GetAcompanteById(3);
 
             //Asserts
-
             Assert.Null(result);
         }
 
@@ -518,22 +575,7 @@ namespace UnitTest
 
             IAcompanteService service = new AcompananteService(mockAcompananteCommand.Object, mockAcompananteQuery.Object, mapping, mockUsuarioCommand.Object, mockUsuarioQuery.Object, mockPropuestaCommand.Object);
 
-            var Acompanante = new Acompanante
-            {
-                AcompananteId = 1,
-                UsuarioId = 1,
-                ZonaLaboral = "Berazategui",
-                ObraSocialId = 2,
-                Contacto = "123456789",
-                Documentacion = "Documento de prueba",
-                EspecialidadId = 1,
-                Experiencia = "5 años",
-                Disponibilidad = Convert.ToInt16("000011110110110", 2), // Int16
-                ObrasSociales = new List<AcompananteObraSocial>(),
-                Especialidades = new List<AcompananteEspecialidad>(),
-            };
-
-            mockAcompananteQuery.Setup(q => q.GetAcompananteById(1)).ReturnsAsync(Acompanante);
+            mockAcompananteQuery.Setup(q => q.GetAcompananteById(It.IsAny<int>()));
 
             //Act
             var result = await service.IfExist(3);
@@ -845,8 +887,6 @@ namespace UnitTest
 
             mockAcompananteQuery.Setup(q => q.GetAcompananteById(It.IsAny<int>())).ReturnsAsync(acompanante);
 
-            mockAcompananteCommand.Setup(q => q.CreateAcompanteObraSocial(It.IsAny<AcompananteObraSocial>())).ReturnsAsync(atobrasocial);
-
             //Act & Asserts
             await Assert.ThrowsAsync<RelacionExistenteException>(async () => await service.CreateAcompanteObraSocial(atObraSocialDTO));
         }
@@ -1042,10 +1082,6 @@ namespace UnitTest
             especialidad.Acompanantes = new List<AcompananteEspecialidad> { atEspecialidad };
 
             acompanante.Especialidades = new List<AcompananteEspecialidad> { atEspecialidad };
-
-
-            mockAcompananteCommand.Setup(q => q.CreateAcompanteEspecialidad(It.IsAny<AcompananteEspecialidad>())).ReturnsAsync(atEspecialidad);
-
 
             //Act & Assert
             await Assert.ThrowsAsync<RelacionExistenteException>(async () => await service.CreateAcompanteEspecialidad(atEspecialidadDTO));
