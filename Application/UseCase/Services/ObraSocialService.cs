@@ -59,7 +59,7 @@ namespace Application.UseCase.Services
         async Task<ObraSocialResponse?> IObraSocialService.UpdateObraSocial(int Id, ObraSocialDTO ObraSocialDTO)
         {
             ObraSocial? ObraSocial = await _Query.ComprobarExistencia(ObraSocialDTO.Nombre);
-            if (ObraSocial != null && ObraSocial.ObraSocialId != Id)
+            if (ObraSocial == null || ObraSocial.ObraSocialId != Id)
             {
                 return null;
             }
@@ -86,7 +86,7 @@ namespace Application.UseCase.Services
                 return null;
             }
 
-            ObraSocial Especialidad = await _Command.CreateObraSocial(new ObraSocial
+            ObraSocial obraSocial = await _Command.CreateObraSocial(new ObraSocial
             {
                 Nombre = ObraSocialDTO.Nombre,
                 Descripcion = ObraSocialDTO.Descripcion,
@@ -94,9 +94,9 @@ namespace Application.UseCase.Services
 
             return new ObraSocialResponse
             {
-                ObraSocialId = Especialidad.ObraSocialId,
-                Nombre = Especialidad.Nombre,
-                Descripcion = Especialidad.Descripcion,
+                ObraSocialId = obraSocial.ObraSocialId,
+                Nombre = obraSocial.Nombre,
+                Descripcion = obraSocial.Descripcion,
             };
         }
 
