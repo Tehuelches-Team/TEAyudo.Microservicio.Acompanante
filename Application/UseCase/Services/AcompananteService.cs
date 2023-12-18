@@ -34,19 +34,19 @@ namespace Application.UseCase.Services
         {
             List<Acompanante> ListaAcompanantes = await _AcompananteQuery.GetAcompananteFiltros(Id, Especialidad, Disponibilidad, ObraSocial, ZonaLaboral);
             List<UsuarioResponse> ListaUsuarioResponse = await _UsuarioQuery.GetAllUsuarios();
-            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes, ListaUsuarioResponse); //Falta la lista de usuarios 
+            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes, ListaUsuarioResponse); 
         }
 
         async Task<List<AcompananteResponse?>> IAcompanteService.GetAcompantes()
         {
             List<Acompanante>? ListaAcompanantes = await _AcompananteQuery.GetAcompanantes();
-            if (ListaAcompanantes == null) // Debería comparar con null o con count ¿?                               
+            if (ListaAcompanantes == null)                              
             {
                 return null;
             }
 
             List<UsuarioResponse> ListaUsuarioResponse = await _UsuarioQuery.GetAllUsuarios();
-            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes, ListaUsuarioResponse); //Falta la lista de usuarios 
+            return await _CreateResponse.CreateAcompanantesResponse(ListaAcompanantes, ListaUsuarioResponse); 
         }
 
         async Task<AcompananteResponse?> IAcompanteService.GetAcompanteById(int Id)
@@ -140,8 +140,6 @@ namespace Application.UseCase.Services
         }
 
 
-
-
         async Task<AcompananteEspecialidadResponse?> IAcompanteService.CreateAcompanteEspecialidad(AcompananteEspecialidadDTO Relacion)
         {
             Acompanante? Acompanante = await _AcompananteQuery.GetAcompananteById(Relacion.AcompananteId);
@@ -153,11 +151,13 @@ namespace Application.UseCase.Services
                     throw new RelacionExistenteException("");
                 }
             }
+
             AcompananteEspecialidad? AcompananteEspecialidad = await _AcompananteCommand.CreateAcompanteEspecialidad(new AcompananteEspecialidad
             {
                 AcompananteId = Relacion.AcompananteId,
                 EspecialidadId = Relacion.EspecialidadId,
             });
+
             if (AcompananteEspecialidad == null) return null;
             List<EspecialidadResponse> Especialidades = new List<EspecialidadResponse>();
             foreach (var item in AcompananteEspecialidad.Acompanante.Especialidades)
