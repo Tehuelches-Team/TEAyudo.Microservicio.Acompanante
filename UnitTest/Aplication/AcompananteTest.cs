@@ -11,7 +11,7 @@ using Application.UseCase.Services;
 using Moq;
 using TEAyudo_Acompanantes;
 
-namespace UnitTest
+namespace UnitTest.Aplication
 {
     public class AcompananteTest
     {
@@ -235,7 +235,7 @@ namespace UnitTest
                 Documentacion = "Documento de prueba",
                 EspecialidadId = 2,
                 Experiencia = "3 años",
-                Disponibilidad = Convert.ToInt16("000111100100011", 2), 
+                Disponibilidad = Convert.ToInt16("000111100100011", 2),
             };
 
             var primerUsuario = new UsuarioResponse
@@ -348,13 +348,13 @@ namespace UnitTest
 
             segundoAT.Especialidades = new List<AcompananteEspecialidad> { segundoATEspecialidad };
 
-            mockAcompananteQuery.Setup(q => q.GetAcompananteFiltros(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Int16>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(listaAcompanantes);
+            mockAcompananteQuery.Setup(q => q.GetAcompananteFiltros(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<short>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(listaAcompanantes);
 
             mockUsuarioQuery.Setup(q => q.GetAllUsuarios()).ReturnsAsync(listaUsuarios);
 
             //Act
             var result = await service.Filtrar(0, 2, Convert.ToInt16("000111100100010", 2), 0, "Quilmes");
-            
+
             //Assert
             Assert.NotNull(result);
         }
@@ -365,7 +365,6 @@ namespace UnitTest
             //Arrange 
             var mockAcompananteCommand = new Mock<IAcompananteCommand>();
             var mockAcompananteQuery = new Mock<IAcompananteQuery>();
-            //var mockCreateResponse = new Mock<ICreateAcompananteResponse>();
             ICreateAcompananteResponse mapping = new CreateAcompananteResponse();
             var mockUsuarioCommand = new Mock<IUsuarioCommand>();
             var mockUsuarioQuery = new Mock<IUsuarioQuery>();
@@ -373,16 +372,17 @@ namespace UnitTest
 
             IAcompanteService service = new AcompananteService(mockAcompananteCommand.Object, mockAcompananteQuery.Object, mapping, mockUsuarioCommand.Object, mockUsuarioQuery.Object, mockPropuestaCommand.Object);
 
-            var Usuario = new UsuarioResponse {
-                    UsuarioId=1,
-                    Nombre="Antoine",
-                    Apellido="Griezmann",
-                    CorreoElectronico="Antoine@gmail.com",
-                    Contrasena="Grizzi7",
-                    FotoPerfil="https://i0.wp.com/www.lacolinadenervion.com/wp-content/uploads/2023/09/atletico-madrid-v-real-madrid-cf-laliga-ea-sports-scaled.jpg?fit=800%2C533&ssl=1",
-                    Domicilio="Madrid",
-                    FechaNacimiento="21/03/1991",
-                    EstadoUsuarioId=1
+            var Usuario = new UsuarioResponse
+            {
+                UsuarioId = 1,
+                Nombre = "Antoine",
+                Apellido = "Griezmann",
+                CorreoElectronico = "Antoine@gmail.com",
+                Contrasena = "Grizzi7",
+                FotoPerfil = "https://i0.wp.com/www.lacolinadenervion.com/wp-content/uploads/2023/09/atletico-madrid-v-real-madrid-cf-laliga-ea-sports-scaled.jpg?fit=800%2C533&ssl=1",
+                Domicilio = "Madrid",
+                FechaNacimiento = "21/03/1991",
+                EstadoUsuarioId = 1
             };
 
             mockUsuarioQuery.Setup(q => q.GetUsuarioById(1)).ReturnsAsync(Usuario);
@@ -630,7 +630,7 @@ namespace UnitTest
                 Disponibilidad = "000011110110110",
             };
 
-            mockAcompananteCommand.Setup(q => q.UpdateAcompanante(1,usuario));
+            mockAcompananteCommand.Setup(q => q.UpdateAcompanante(1, usuario));
 
             var at = mockAcompananteQuery.Setup(q => q.GetAcompananteById(1)).ReturnsAsync(Acompanante);
 
@@ -659,7 +659,7 @@ namespace UnitTest
             };
             MapUsuarioDTO Mapping = new MapUsuarioDTO();
 
-            var usuarioResult = mockUsuarioCommand.Setup(q => q.PutUsuario(1,It.IsAny<UsuarioDTO>())).ReturnsAsync(usuarioresponse);
+            var usuarioResult = mockUsuarioCommand.Setup(q => q.PutUsuario(1, It.IsAny<UsuarioDTO>())).ReturnsAsync(usuarioresponse);
 
             //Act
             var result = await service.UpdateAcompante(1, usuario);
@@ -692,12 +692,12 @@ namespace UnitTest
             };
 
             mockAcompananteCommand.Setup(q => q.CreateAcompanante(It.IsAny<Acompanante>())).ReturnsAsync(1);
-            
+
             //Act
             var result = await service.CreateAcompante(Usuariodto);
 
             //Asserts
-            Assert.Equal(1,result);
+            Assert.Equal(1, result);
         }
 
         [Fact]
@@ -723,7 +723,7 @@ namespace UnitTest
                 Documentacion = "Documento de prueba",
                 EspecialidadId = 1,
                 Experiencia = "5 años",
-                Disponibilidad = Convert.ToInt16("000011110110110", 2), 
+                Disponibilidad = Convert.ToInt16("000011110110110", 2),
                 ObrasSociales = new List<AcompananteObraSocial>(),
                 Especialidades = new List<AcompananteEspecialidad>(),
             };
@@ -1166,7 +1166,7 @@ namespace UnitTest
                 PropuestaId = 1,
                 TutorId = 1,
                 AcompananteId = 1,
-                InfoAdicional= "Escolar",
+                InfoAdicional = "Escolar",
                 Monto = 200000,
                 EstadoPropuesta = 1,
                 Descripcion = "A la grande le puse cuca"
@@ -1175,7 +1175,7 @@ namespace UnitTest
             mockPropuestaCommand.Setup(q => q.PutPropuesta(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(propuesta);
 
             //Act
-            var result = await service.PutPropuesta(1,1);
+            var result = await service.PutPropuesta(1, 1);
 
             //Asserts
             Assert.NotNull(result);

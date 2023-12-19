@@ -257,6 +257,30 @@ var assemblies = [
       { "name": "TEAyudo_Acompanantes.Especialidad", "rp": "Domain_Especialidad.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "TEAyudo_Acompanantes.ObraSocial", "rp": "Domain_ObraSocial.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
+  {
+    "name": "Infraestructure",
+    "classes": [
+      { "name": "Infraestructure.Command.AcompananteCommand", "rp": "Infraestructure_AcompananteCommand.html", "cl": 0, "ucl": 38, "cal": 38, "tl": 74, "cb": 0, "tb": 4, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Command.EspecialidadCommand", "rp": "Infraestructure_EspecialidadCommand.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Command.ObraSocialCommand", "rp": "Infraestructure_ObraSocialCommand.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Command.PropuestaCommand", "rp": "Infraestructure_PropuestaCommand.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Command.UsuarioCommand", "rp": "Infraestructure_UsuarioCommand.html", "cl": 0, "ucl": 21, "cal": 21, "tl": 40, "cb": 0, "tb": 4, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Migrations.TEAyudoContextModelSnapshot", "rp": "Infraestructure_TEAyudoContextModelSnapshot.html", "cl": 0, "ucl": 264, "cal": 264, "tl": 294, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Migrations.v1", "rp": "Infraestructure_v1.html", "cl": 0, "ucl": 405, "cal": 405, "tl": 468, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Querys.AcompananteQuery", "rp": "Infraestructure_AcompananteQuery.html", "cl": 0, "ucl": 51, "cal": 51, "tl": 77, "cb": 0, "tb": 10, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Querys.EspecialidadQuery", "rp": "Infraestructure_EspecialidadQuery.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Querys.ObraSocialQuery", "rp": "Infraestructure_ObraSocialQuery.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 33, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Infraestructure.Querys.UsuarioQuery", "rp": "Infraestructure_UsuarioQuery.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 29, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "TEAyudo_Acompanantes.TEAyudoContext", "rp": "Infraestructure_TEAyudoContext.html", "cl": 0, "ucl": 88, "cal": 88, "tl": 112, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+    ]},
+  {
+    "name": "TEAyudo_Acompanantes",
+    "classes": [
+      { "name": "Program", "rp": "TEAyudo_Acompanantes_Program.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 58, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "TEAyudo_Acompanantes.Controllers.EspecialidadesController", "rp": "TEAyudo_Acompanantes_EspecialidadesController.html", "cl": 0, "ucl": 47, "cal": 47, "tl": 100, "cb": 0, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "TEAyudo_Acompanantes.Controllers.ObrasSocialesController", "rp": "TEAyudo_Acompanantes_ObrasSocialesController.html", "cl": 0, "ucl": 47, "cal": 47, "tl": 97, "cb": 0, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "TEAyudo.Controllers.AcompanantesController", "rp": "TEAyudo_Acompanantes_AcompanantesController.html", "cl": 30, "ucl": 82, "cal": 112, "tl": 181, "cb": 7, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+    ]},
 ];
 
 var metrics = [{ "name": "Cyclomatic complexity", "abbreviation": "cc", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" }, { "name": "NPath complexity", "abbreviation": "npth", "explanationUrl": "https://modess.io/npath-complexity-cyclomatic-complexity-explained" }, { "name": "Sequence coverage", "abbreviation": "seq", "explanationUrl": "https://en.wikipedia.org/wiki/Code_coverage" }, { "name": "Branch coverage", "abbreviation": "bcov", "explanationUrl": "https://en.wikipedia.org/wiki/Code_coverage" }];

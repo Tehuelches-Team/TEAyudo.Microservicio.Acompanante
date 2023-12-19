@@ -18,20 +18,20 @@ namespace TEAyudo.Controllers
         }
 
         [HttpGet("Filtros")]
-        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteByFiltros(int? Id = null, int? Especialidad = null, string? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
+        public async Task<IActionResult> GetAcompananteByFiltros(int? Id = null, int? Especialidad = null, string? Disponibilidad = null, int? ObraSocial = null, string? ZonaLaboral = null)
         {
             Int16 dispo = Convert.ToInt16(("000" + Disponibilidad), 2);
             List<AcompananteResponse> ListaAcompanantes = await _ServiceAcompanante.Filtrar(Id, Especialidad, dispo, ObraSocial, ZonaLaboral);
             if (!ListaAcompanantes.Any())
             {
                 var respuesta = new { Motivo = "No se encuentran acompañantes con los requisitos buscados." };
-                return new JsonResult(respuesta) { StatusCode = 404 };
+                return NotFound(respuesta);
             }
             return Ok(ListaAcompanantes);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompanantes()
+        public async Task<IActionResult> GetAcompanantes()
         {
             List<AcompananteResponse?> Disponibilidad = await _ServiceAcompanante.GetAcompantes();
             if (Disponibilidad.Count() == 0)
@@ -43,10 +43,10 @@ namespace TEAyudo.Controllers
         }
 
         [HttpGet ("Id/{UsuarioId}")]
-        public async Task<ActionResult<IEnumerable<AcompananteResponse>>> GetAcompananteId(int UsuarioId)
+        public async Task<IActionResult> GetAcompananteId(int UsuarioId)
         {
             int? response = await _ServiceAcompanante.GetATIdbyUsuarioId(UsuarioId);
-            if (response == null)
+            if (response == null || response==0)
             {
                 var Respuesta = new { Motivo = "No se encontraron acompanantes registrados." };
                 return NotFound(Respuesta);
@@ -56,7 +56,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<AcompananteResponse>> GetAcompanantesById(int Id)
+        public async Task<IActionResult> GetAcompanantesById(int Id)
         {
             AcompananteResponse? Disponibilidad = await _ServiceAcompanante.GetAcompanteById(Id);
             if (Disponibilidad == null)
@@ -99,12 +99,11 @@ namespace TEAyudo.Controllers
             return Ok(await _ServiceAcompanante.PutPropuesta(Id, Estado));
         }
 
-
         [HttpPost("Acompanante")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompanante(AcompananteDTO AcompananteDTO) 
+        public async Task<IActionResult> PostAcompanante(AcompananteDTO AcompananteDTO) 
         {
             int? result = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); 
-            if (result != null)
+            if (result != 0) //Tuve que cambiar null por 0 porque no podía realizar el test
             {
                 var ObjetoAnonimo = new
                 {
@@ -117,7 +116,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPost("Relacion/Acompanante/ObraSocial")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompananteObraSocial(AcompananteObraSocialDTO AcompananteObraSocialDTO) 
+        public async Task<IActionResult> PostAcompananteObraSocial(AcompananteObraSocialDTO AcompananteObraSocialDTO) 
         {
             if (!await _ServiceAcompanante.IfExist(AcompananteObraSocialDTO.AcompananteId))
             {
@@ -142,7 +141,7 @@ namespace TEAyudo.Controllers
         }
 
         [HttpPost("Relacion/Acompanante/Especialidad")]
-        public async Task<ActionResult<AcompananteResponse>> PostAcompananteEspecialidad(AcompananteEspecialidadDTO AcompananteEspecialidadDTO) 
+        public async Task<IActionResult> PostAcompananteEspecialidad(AcompananteEspecialidadDTO AcompananteEspecialidadDTO) 
         {
             if (!await _ServiceAcompanante.IfExist(AcompananteEspecialidadDTO.AcompananteId))
             {

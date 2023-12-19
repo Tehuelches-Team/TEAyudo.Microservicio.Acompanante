@@ -6,7 +6,7 @@ using Application.UseCase.Services;
 using Moq;
 using TEAyudo_Acompanantes;
 
-namespace UnitTest
+namespace UnitTest.Aplication
 {
     public class EspecialidadTest
     {
@@ -148,7 +148,7 @@ namespace UnitTest
             mockEspecialidadesCommand.Setup(q => q.UpdateEspecialidad(It.IsAny<Especialidad>()));
 
             //act
-            var result = await service.UpdateEspecialidad(1,especialidadDTO);
+            var result = await service.UpdateEspecialidad(1, especialidadDTO);
 
             //Assert
             Assert.NotNull(result);

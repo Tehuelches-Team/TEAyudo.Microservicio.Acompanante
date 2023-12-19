@@ -7,7 +7,7 @@ using Application.UseCase.Services;
 using Moq;
 using TEAyudo_Acompanantes;
 
-namespace UnitTest
+namespace UnitTest.Aplication
 {
     public class ObraSocialTest
     {
@@ -157,7 +157,7 @@ namespace UnitTest
             mockObraSocialesCommand.Setup(q => q.UpdateObraSocial(It.IsAny<ObraSocial>()));
 
             //Act
-            var result = await service.UpdateObraSocial(1,obraSocialDTO);
+            var result = await service.UpdateObraSocial(1, obraSocialDTO);
 
             //Assert
             Assert.NotNull(result);
