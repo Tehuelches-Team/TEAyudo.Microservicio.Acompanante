@@ -18,7 +18,7 @@ namespace TEAyudo_Acompanantes.Controllers
 
         // GET: api/Especialidades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EspecialidadResponse>>> GetEspecialidades() 
+        public async Task<IActionResult> GetEspecialidades() 
         {
             List<EspecialidadResponse> Especialidades = await _Service.GetEspecialidades();
 
@@ -28,12 +28,12 @@ namespace TEAyudo_Acompanantes.Controllers
                 return NotFound(Respuesta);
             }
 
-            return Especialidades; 
+            return Ok(Especialidades); 
         }
 
         // GET: api/Especialidades/5
         [HttpGet("{Id}")]
-        public async Task<ActionResult<EspecialidadResponse>> GetEspecialidad(int Id) 
+        public async Task<IActionResult> GetEspecialidad(int Id) 
         {
             EspecialidadResponse Especialidad = await _Service.GetEspecialidadById(Id);
 
@@ -43,7 +43,7 @@ namespace TEAyudo_Acompanantes.Controllers
                 return NotFound(Respuesta);
             }
 
-            return Especialidad;
+            return Ok(Especialidad);
         }
 
         // PUT: api/Especialidades/5
@@ -61,7 +61,7 @@ namespace TEAyudo_Acompanantes.Controllers
             if (Especialidad == null)
             {
                 var Respuesta = new { Motivo = "No es posible actualizar los datos de la especialidad ingresada, dado que existe otra especialidad con ese nombre en la base de datos" };
-                return NotFound(Respuesta);
+                return Conflict(Respuesta);
             }
 
             return Ok(Especialidad);
@@ -69,7 +69,7 @@ namespace TEAyudo_Acompanantes.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> PostEspecialidad(EspecialidadDTO EspecialidadDTO) 
+        public async Task<IActionResult> PostEspecialidad(EspecialidadDTO EspecialidadDTO) 
         {
             EspecialidadResponse? Especialidad = await _Service.CreateEspecialidad(EspecialidadDTO);
 

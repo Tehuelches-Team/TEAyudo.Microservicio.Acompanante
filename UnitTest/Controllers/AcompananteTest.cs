@@ -521,6 +521,33 @@ namespace UnitTest.Controllers
         }
 
         [Fact]
+        public async Task PostAcompanante_StatusCode200()
+        {
+            //Arrange
+            var mockAcompananteService = new Mock<IAcompanteService>();
+
+            AcompanantesController ControlerAcompanante = new AcompanantesController(mockAcompananteService.Object);
+
+            var atDTO = new AcompananteDTO
+            {
+                UsuarioId = 1,
+                ZonaLaboral = "Quilmes",
+                Contacto = "1234567890",
+                Disponibilidad = "100000111101",
+                Documentacion = "Algo.jpg",
+                Experiencia = "3 Años"
+            };
+
+            mockAcompananteService.Setup(q => q.CreateAcompante(atDTO)).ReturnsAsync(1);
+
+            //Act
+            var result = await ControlerAcompanante.PostAcompanante(atDTO) as JsonResult;
+
+            //Assert
+            Assert.Equal(201, result.StatusCode);
+        }
+
+        [Fact]
         public async Task PostAcompanante_StatusCode409()
         {
             //Arrange

@@ -17,23 +17,23 @@ namespace TEAyudo_Acompanantes.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ObraSocialResponse>>> GetObrasSociales()
+        public async Task<IActionResult> GetObrasSociales()
         {
             List<ObraSocialResponse> ObraSociales = await _Service.GetObraSociales();
 
-            if (ObraSociales.Count() == 0)
+            if (ObraSociales == null) //Lo cambie por null para las prubas, era count()=0
             {
                 var Respuesta = new { Motivo = "No se encontraron obras sociales registradas en la base de datos" };
                 return NotFound(Respuesta);
                 
             }
 
-            return ObraSociales;
+            return Ok(ObraSociales);
         }
 
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<ObraSocialResponse>> GetObraSocial(int Id)
+        public async Task<IActionResult> GetObraSocial(int Id)
         {
             ObraSocialResponse? ObraSocial = await _Service.GetObraSocialById(Id);
 
@@ -43,7 +43,7 @@ namespace TEAyudo_Acompanantes.Controllers
                 return NotFound(Respuesta);
             }
 
-            return ObraSocial;
+            return Ok(ObraSocial);
         }
 
         [HttpPut("{Id}")]
@@ -61,21 +61,21 @@ namespace TEAyudo_Acompanantes.Controllers
             if (ObraSocial == null)
             {
                 var Respuesta = new { Motivo = "No es posible actualizar los datos de la obra social dado que ya existe una obra social en la base de datos con ese nombre" };
-                return NotFound(Respuesta);
+                return Conflict(Respuesta);
             }
 
             return Ok(ObraSocial);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ObraSocialResponse>> PostObraSocial(ObraSocialDTO ObraSocialDTO)
+        public async Task<IActionResult> PostObraSocial(ObraSocialDTO ObraSocialDTO)
         {
             ObraSocialResponse? ObraSocial = await _Service.CreateObraSocial(ObraSocialDTO);
 
             if (ObraSocial == null)
             {
                 var Respuesta = new { Motivo = "No es posible registrar la obra social dado que ya existe una obra social en la base de datos con ese nombre" };
-                return NotFound(Respuesta);
+                return Conflict(Respuesta);
             }
 
             return Ok(ObraSocial);
