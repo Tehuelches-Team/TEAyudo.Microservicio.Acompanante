@@ -103,7 +103,7 @@ namespace TEAyudo.Controllers
         public async Task<IActionResult> PostAcompanante(AcompananteDTO AcompananteDTO) 
         {
             int? result = await _ServiceAcompanante.CreateAcompante(AcompananteDTO); 
-            if (result != 0) //Tuve que cambiar null por 0 porque no podía realizar el test
+            if (result != 0) 
             {
                 var ObjetoAnonimo = new
                 {

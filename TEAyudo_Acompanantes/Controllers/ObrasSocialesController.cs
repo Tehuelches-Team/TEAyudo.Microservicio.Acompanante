@@ -21,7 +21,7 @@ namespace TEAyudo_Acompanantes.Controllers
         {
             List<ObraSocialResponse> ObraSociales = await _Service.GetObraSociales();
 
-            if (ObraSociales == null) //Lo cambie por null para las prubas, era count()=0
+            if (ObraSociales.Count == 0) 
             {
                 var Respuesta = new { Motivo = "No se encontraron obras sociales registradas en la base de datos" };
                 return NotFound(Respuesta);

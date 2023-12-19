@@ -277,7 +277,7 @@ var assemblies = [
     "name": "TEAyudo_Acompanantes",
     "classes": [
       { "name": "Program", "rp": "TEAyudo_Acompanantes_Program.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 58, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "TEAyudo_Acompanantes.Controllers.EspecialidadesController", "rp": "TEAyudo_Acompanantes_EspecialidadesController.html", "cl": 0, "ucl": 47, "cal": 47, "tl": 100, "cb": 0, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "TEAyudo_Acompanantes.Controllers.EspecialidadesController", "rp": "TEAyudo_Acompanantes_EspecialidadesController.html", "cl": 47, "ucl": 0, "cal": 47, "tl": 100, "cb": 12, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "TEAyudo_Acompanantes.Controllers.ObrasSocialesController", "rp": "TEAyudo_Acompanantes_ObrasSocialesController.html", "cl": 47, "ucl": 0, "cal": 47, "tl": 97, "cb": 12, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "TEAyudo.Controllers.AcompanantesController", "rp": "TEAyudo_Acompanantes_AcompanantesController.html", "cl": 112, "ucl": 0, "cal": 112, "tl": 180, "cb": 23, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},

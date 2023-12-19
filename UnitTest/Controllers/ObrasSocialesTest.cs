@@ -59,7 +59,9 @@ namespace UnitTest.Controllers
 
             ObrasSocialesController ControlerAcompanante = new ObrasSocialesController(mockAcompananteService.Object);
 
-            mockAcompananteService.Setup(q => q.GetObraSociales());
+            var listObraSociales = new List<ObraSocialResponse>();
+
+            mockAcompananteService.Setup(q => q.GetObraSociales()).ReturnsAsync(listObraSociales);
 
             //Act
             var result = await ControlerAcompanante.GetObrasSociales() as NotFoundObjectResult;
